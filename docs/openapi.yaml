@@ -1,0 +1,345 @@
+openapi: 3.0.3
+info:
+  title: HOSE API
+  version: 1.0.0
+paths:
+  # Query filtered and/or ordered list of Property summaries
+  /properties:
+    get:
+      summary: Get a list of properties (lightweight DTOs)
+      description: |
+        Returns a list of properties in Ellensburg, WA. Supports filtering 
+        price, availability, pet-friendliness, number of bedrooms, and 
+        number of bathrooms
+      parameters:
+        - name: minRent
+          in: query
+          description: Minimum monthly rent
+          required: false
+          schema:
+            type: integer # Stored in cents
+        - name: maxRent
+          in: query
+          description: Maximum monthly rent
+          required: false
+          schema:
+            type: integer # Stored in cents
+        - name: bedrooms
+          in: query
+          description: Minimum number of bedrooms
+          required: false
+          schema:
+            type: integer
+        - name: bathrooms
+          in: query
+          description: Minimum number of bathrooms
+          required: false
+          schema:
+            type: integer
+        - name: petFriendly
+          in: query
+          description: Return only pet-friendly properties
+          required: false
+          schema:
+            type: boolean
+        - name: page
+          in: query
+          description: Page number for pagination (default 1)
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          description: Number of items per page (default 20)
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: sortRent
+          in: query
+          description: Optional sorting of properties by rent. Use `asc` for lowest to highest, `desc` for highest to lowest.
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: asc
+
+      responses:
+        '200':
+          description: List of property DTOs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  page:
+                    type: integer
+                    example: 1
+                  limit:
+                    type: integer
+                    example: 20
+                  total:
+                    type: integer
+                    example: 125
+                  properties:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PropertyDTO'
+        '400':
+          description: Invalid query parameter
+        '500':
+          description: Internal server error
+          
+  # Query full property data by ID
+  /properties/{id}:
+    get:
+      summary: Get full property details by ID
+      description: |
+        Returns full details for a single property, including lease agreements, rooms, pet policy, 
+        distance to CWU, and other attributes. The `id` path parameter is the Postgres auto-incremented primary key.
+      parameters:
+        - name: id
+          in: path
+          description: Unique property identifier (integer primary key)
+          required: true
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: Full property object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+        '404':
+          description: Property not found
+        '500':
+          description: Internal server error
+  
+  # Query properties spatially by bounding box
+  # GeoJSON response
+  /properties/geo:
+    get:
+      summary: Get properties as GeoJSON for interactive map
+      description: |
+        Returns properties within a bounding box in GeoJSON format. Only includes property `id` in properties.
+      parameters:
+        - name: sw_lat
+          in: query
+          required: true
+          schema:
+            type: number
+            format: float
+        - name: sw_lng
+          in: query
+          required: true
+          schema:
+            type: number
+            format: float
+        - name: ne_lat
+          in: query
+          required: true
+          schema:
+            type: number
+            format: float
+        - name: ne_lng
+          in: query
+          required: true
+          schema:
+            type: number
+            format: float
+        - name: minRent
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: maxRent
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: bedrooms
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: bathrooms
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: petFriendly
+          in: query
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: GeoJSON FeatureCollection of properties
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - type
+                  - features
+                properties:
+                  type:
+                    type: string
+                    example: FeatureCollection
+                  features:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - type
+                        - geometry
+                        - properties
+                      properties:
+                        type:
+                          type: string
+                          example: Feature
+                        geometry:
+                          type: object
+                          required:
+                            - type
+                            - coordinates
+                          properties:
+                            type:
+                              type: string
+                              example: Point
+                            coordinates:
+                              type: array
+                              items:
+                                type: number
+                              example: [-120.546, 46.996]
+                        properties:
+                          type: object
+                          required:
+                            - id
+                          properties:
+                            id:
+                              type: integer
+                              example: 123
+        '400':
+          description: Invalid query parameters
+        '500':
+          description: Internal server error
+
+
+components:
+  schemas:
+    PropertyDTO:
+      type: object
+      description: Lightweight representation of a property
+      required:
+        - id
+        - address
+        - rent
+        - bedrooms
+        - bathrooms
+        - petFriendly
+      properties:
+        id:
+          type: integer
+          description: Unique property identifier
+          example: 123
+        name:
+          type: string
+          example: "Pine Street Apartments"
+        address:
+          type: string
+          example: "123 Pine St, Ellensburg, WA"
+        rent:
+          type: integer # Stored in cents
+          example: 85000 # $850.00
+        bedrooms:
+          type: integer
+          example: 2
+        bathrooms:
+          type: integer
+          example: 1
+        petFriendly:
+          type: boolean
+          example: true
+        thumbnailUrl:
+          type: string
+          example: "/images/prop_123.jpg"
+    Property:
+      type: object
+      description: Full representation of a property
+      required:
+        - id
+        - address
+        - rent
+        - bedrooms
+        - bathrooms
+        - petFriendly
+      properties:
+        id:
+          type: integer
+          description: Unique property identifier
+          example: 123
+        name:
+          type: string
+          example: "Pine Street Apartments"
+        address:
+          type: string
+          example: "123 Pine St, Ellensburg, WA"
+        rent:
+          type: integer # Stored in cents
+          example: 85000 # $850.00
+        bedrooms:
+          type: integer
+          example: 2
+        bathrooms:
+          type: integer
+          example: 1
+        petPolicy:
+          type: object
+          properties:
+            allowed:
+              type: boolean
+              example: true
+            deposit:
+              type: integer # Stored in cents
+              example: 30000 # $300.00
+            restrictions:
+              type: string
+              example: "Cats and small dogs only"
+        leaseAgreements:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                example: "12-month"
+              startMonth:
+                type: string
+                example: "September"
+              earlyTerminationFee:
+                type: integer # Stored in cents
+                example: 10000 # $100.00 
+        distanceToCWU:
+          type: object
+          properties:
+            walkingMiles:
+              type: number
+              format: float
+              example: 0.8
+            walkingMinutes:
+              type: integer
+              example: 16
+        thumbnailUrl:
+          type: string
+          example: "/images/prop_123.jpg"
+        description:
+          type: string
+          example: "Quiet student-friendly housing near campus."
+        availability:
+          type: string
+          format: date
+          example: "2026-09-01"
