@@ -202,116 +202,90 @@ paths:
         '500':
           description: Internal server error
   
-  # Query properties spatially by bounding box
-  # GeoJSON response
-  /properties/geo:
+  /destinations/geo:
     get:
-      summary: Get properties as GeoJSON for interactive map
+      summary: Get destinations as GeoJSON for interactive map
       description: |
-        Returns properties within a bounding box in GeoJSON format. Only includes property `id` in properties.
+        Returns all destinations (properties, bus stops, CWU, etc.) within a bounding box in GeoJSON format.
+        Optional filtering by destination type and property attributes. Property filters only apply if `type=property` or type is not specified.
       parameters:
         - name: sw_lat
           in: query
           required: true
+          description: Southwest latitude of bounding box
           schema:
             type: number
             format: float
         - name: sw_lng
           in: query
           required: true
+          description: Southwest longitude of bounding box
           schema:
             type: number
             format: float
         - name: ne_lat
           in: query
           required: true
+          description: Northeast latitude of bounding box
           schema:
             type: number
             format: float
         - name: ne_lng
           in: query
           required: true
+          description: Northeast longitude of bounding box
           schema:
             type: number
             format: float
+        - name: type
+          in: query
+          required: false
+          description: Filter by destination type. If omitted, all types are returned. Property filters only apply if `type=property`.
+          schema:
+            type: string
+            enum: [property, cwu, bus_stop, other]
+        # Property-specific filters (only applied to destinations where type=property)
         - name: minRent
           in: query
           required: false
+          description: Minimum rent in cents (applied only to properties)
           schema:
             type: integer
         - name: maxRent
           in: query
           required: false
+          description: Maximum rent in cents (applied only to properties)
           schema:
             type: integer
         - name: bedrooms
           in: query
           required: false
+          description: Minimum number of bedrooms (applied only to properties)
           schema:
             type: integer
         - name: bathrooms
           in: query
           required: false
+          description: Minimum number of bathrooms (applied only to properties)
           schema:
             type: integer
         - name: petFriendly
           in: query
           required: false
+          description: Filter only pet-friendly properties (applied only to properties)
           schema:
             type: boolean
       responses:
         '200':
-          description: GeoJSON FeatureCollection of properties
+          description: GeoJSON FeatureCollection of destinations
           content:
             application/json:
               schema:
-                type: object
-                required:
-                  - type
-                  - features
-                properties:
-                  type:
-                    type: string
-                    example: FeatureCollection
-                  features:
-                    type: array
-                    items:
-                      type: object
-                      required:
-                        - type
-                        - geometry
-                        - properties
-                      properties:
-                        type:
-                          type: string
-                          example: Feature
-                        geometry:
-                          type: object
-                          required:
-                            - type
-                            - coordinates
-                          properties:
-                            type:
-                              type: string
-                              example: Point
-                            coordinates:
-                              type: array
-                              items:
-                                type: number
-                              example: [-120.546, 46.996]
-                        properties:
-                          type: object
-                          required:
-                            - id
-                          properties:
-                            id:
-                              type: integer
-                              example: 123
+                $ref: '#/components/schemas/GeoJSONFeatureCollection'
         '400':
           description: Invalid query parameters
         '500':
           description: Internal server error
-
 
 components:
   securitySchemes:
@@ -319,6 +293,7 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+
   schemas:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
     PropertyDTO:
       type: object
@@ -356,6 +331,7 @@ components:
         thumbnailUrl:
           type: string
           example: "/images/prop_123.jpg"
+
     Property:
       type: object
       description: Full representation of a property
@@ -432,3 +408,66 @@ components:
           type: string
           format: date
           example: "2026-09-01"
+
+    GeoJSONFeatureCollection:
+      type: object
+      required:
+        - type
+        - features
+      properties:
+        type:
+          type: string
+          example: FeatureCollection
+        features:
+          type: array
+          items:
+            $ref: '#/components/schemas/GeoJSONFeature'
+
+    GeoJSONFeature:
+      type: object
+      required:
+        - type
+        - geometry
+        - properties
+      properties:
+        type:
+          type: string
+          example: Feature
+        geometry:
+          type: object
+          required:
+            - type
+            - coordinates
+          properties:
+            type:
+              type: string
+              example: Point
+            coordinates:
+              type: array
+              items:
+                type: number
+              example: [-120.546, 46.996]
+        properties:
+          type: object
+          description: >
+            Minimal information for fast map loading. Includes id, name, type, and optional description.
+          required:
+            - id
+            - name
+            - type
+          properties:
+            id:
+              type: integer
+              example: 123
+            name:
+              type: string
+              example: "Pine Street Apartments"
+            type:
+              type: string
+              enum: [property, cwu, bus_stop, other]
+            description:
+              type: string
+              example: "Quiet student-friendly housing near campus."
+            thumbnailUrl:
+              type: string
+              example: "/images/prop_123.jpg"
