@@ -64,7 +64,6 @@ paths:
             type: string
             enum: [asc, desc]
             default: asc
-
       responses:
         '200':
           description: List of property DTOs
@@ -117,14 +116,14 @@ paths:
 
           
   # Query full property data by ID
-  /properties/{id}:
+  /properties/{propertyID}:
     get:
       summary: Get full property details by ID
       description: |
         Returns full details for a single property, including lease agreements, rooms, pet policy, 
-        distance to CWU, and other attributes. The `id` path parameter is the Postgres auto-incremented primary key.
+        distance to CWU, and other attributes. The `propertyID` path parameter is the Postgres auto-incremented primary key.
       parameters:
-        - name: id
+        - name: propertyID
           in: path
           description: Unique property identifier (integer primary key)
           required: true
@@ -142,13 +141,15 @@ paths:
           description: Property not found
         '500':
           description: Internal server error
+
+
     patch:
       summary: Update a property
       description: Modify an existing property. Only accessible to authenticated admin users.
       security:
         - bearerAuth: []
       parameters:
-        - name: id
+        - name: propertyID
           in: path
           required: true
           description: ID of the property to update
@@ -178,13 +179,14 @@ paths:
         '500':
           description: Internal server error
 
+
     delete:
       summary: Delete a property
       description: Remove a property by ID. Only accessible to authenticated admin users.
       security:
         - bearerAuth: []
       parameters:
-        - name: id
+        - name: propertyID
           in: path
           required: true
           description: ID of the property to delete
@@ -201,6 +203,123 @@ paths:
           description: Property not found
         '500':
           description: Internal server error
+
+
+  /properties/{propertyID}/images:
+    post:
+      summary: Upload a new image for a property
+      description: Admin-only endpoint to add an image to a property.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: propertyID
+          in: path
+          required: true
+          description: Property ID to which the image will be added
+          schema:
+            type: integer
+            example: 123
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The image file to upload
+                altText:
+                  type: string
+                  description: Optional alt text for accessibility
+            encoding:
+              file:
+                contentType: image/jpeg, image/png
+      responses:
+        '201':
+          description: Image uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PropertyImage'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Property not found
+
+
+  /properties/{propertyID}/images/{imageID}:
+    delete:
+      summary: Delete an image from a property
+      description: Admin-only endpoint to remove an image.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: propertyID
+          in: path
+          required: true
+          description: Property ID
+          schema:
+            type: integer
+            example: 123
+        - name: imageID
+          in: path
+          required: true
+          description: ID of the image to delete
+          schema:
+            type: integer
+            example: 42
+      responses:
+        '204':
+          description: Image deleted successfully (no content)
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Property or image not found
+
+
+  /properties/{propertyID}/images/{imageID}/thumbnail:
+    put:
+      summary: Set a property image as the thumbnail
+      description: Admin-only endpoint to mark a specific image as the property's thumbnail. Automatically unsets any previous thumbnail.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: propertyID
+          in: path
+          required: true
+          description: Property ID
+          schema:
+            type: integer
+            example: 123
+        - name: imageID
+          in: path
+          required: true
+          description: ID of the image to set as thumbnail
+          schema:
+            type: integer
+            example: 42
+      responses:
+        '200':
+          description: Thumbnail set successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PropertyImage'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Property or image not found
+
   
   /destinations/geo:
     get:
@@ -286,6 +405,7 @@ paths:
           description: Invalid query parameters
         '500':
           description: Internal server error
+
 
 components:
   securitySchemes:
@@ -408,6 +528,36 @@ components:
           type: string
           format: date
           example: "2026-09-01"
+        images:
+          type: array
+          description: All images associated with this property
+          items:
+            $ref: '#/components/schemas/PropertyImage'
+      
+    PropertyImage:
+      type: object
+      required:
+        - id
+        - imageUrl
+        - isThumbnail
+      properties:
+        id:
+          type: integer
+          example: 42
+        imageUrl:
+          type: string
+          example: "/images/prop_123_1.jpg"
+        altText:
+          type: string
+          description: Text description for accessibility
+          example: "Front view of Pine Street Apartments"
+        isThumbnail:
+          type: boolean
+          example: true
+        uploadedAt:
+          type: string
+          format: date-time
+          example: "2026-01-16T12:34:56Z"
 
     GeoJSONFeatureCollection:
       type: object
