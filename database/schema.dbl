@@ -1,0 +1,172 @@
+// DRAFT SCHEMA V1
+
+
+/*  Stores basic information for each property
+ *  Much of the data for each property is stored in other tables through foreign keys
+ */
+Table properties {
+  id int [pk, increment]
+  name text
+  unit text
+
+  rent_cents int [not null]
+  bedrooms int [not null]
+  bathrooms int [not null]
+
+  contact_phone text
+  contact_mail text
+
+  description text
+  availability_date date
+
+  address_id int [not null, ref: > addresses.id]
+  destination_id int [unique, not null, ref: > destinations.id]
+
+  created_at timestamp
+  updated_at timestamp
+}
+
+
+
+/*  Stores physical addresses for properties
+ *  Multiple units/properties can share the same address
+ */
+Table addresses {
+  id int [pk, increment]
+
+  street_address text [not null]
+  city text [not null]
+  state text [not null]
+  postal_code text [not null]
+  country text [default: "USA"]
+
+  destination_id int [unique, not null, ref: > destinations.id]
+
+  created_at timestamp
+  updated_at timestamp
+}
+
+
+
+/*  Used to store locations on map
+ *  Locations include properties, bus stops, CWU, etc.
+ *  Provides GeoJSON features for interactive map
+ */
+Table destinations {
+  id int [pk, increment]
+
+  name text [not null]
+  type text [not null, note: "property | cwu | bus_stop | other"]
+
+  description text
+
+  location geography [note: "PostGIS Point (lat/lng)"]
+
+  created_at timestamp
+  updated_at timestamp
+}
+
+
+
+/*  Tracks walk distance/time from property to destination
+ *  Populated automatically each time new Property added
+ */
+Table property_walk_distances {
+  property_id int [ref: > properties.id]
+  destination_id int [ref: > destinations.id]
+
+  walking_miles decimal(4,2)
+  walking_minutes int
+
+  [pk: property_id, destination_id]
+}
+
+
+
+/*  Stores images for property
+ *  Can host images on free platform like Cloudinary
+ *  Database stores URL's
+ */
+Table property_images {
+  id int [pk, increment]
+  property_id int [ref: > properties.id]
+
+  image_url text [not null]
+  is_thumbnail boolean
+}
+
+
+
+/*  Stores basic lease info for each property
+ *  One-to-One relationship with properties table
+ */
+Table lease_agreements {
+  id int [pk, increment]
+  property_id int [ref: > properties.id]
+
+  lease_type text [note: "e.g. 9-month, 12-month"]
+  start_month text
+  early_termination_fee_cents int
+}
+
+
+
+/*  Stores basic lease info for each property
+ *  One-to-One relationship with properties table
+ */
+Table pet_policies {
+  property_id int [pk, ref: > properties.id]
+  allowed boolean [not null]
+  deposit_cents int
+  restrictions text
+}
+
+
+
+/*  Stores single lease rule applying to many properties
+ *  Example: "No smoking"
+ */
+Table lease_rules {
+  id int [pk, increment]
+  rule_text text [not null]
+  category text [note: "termination | sublease | occupancy | fees"]
+  created_at timestamp
+}
+
+
+
+/*  Stores single pet rule applying to many properties
+ *  Example: "Cats only"
+ */
+Table pet_rules {
+  id int [pk, increment]
+  rule_text text [not null]
+  category text [note: "breed | size | noise | quantity"]
+  created_at timestamp
+}
+
+
+
+/*  Maps Properties to lease rules
+ *  Properties can have zero-to-many lease rules
+ */
+Table lease_agreement_rules {
+  lease_agreement_id int [ref: > lease_agreements.id]
+  lease_rule_id int [ref: > lease_rules.id]
+
+  [pk: lease_agreement_id, lease_rule_id]
+}
+
+
+
+/*  Maps properties to pet rules
+ *  Properties can have zero-to-many pet rules
+ */
+Table property_pet_rules {
+  property_id int [ref: > properties.id]
+  pet_rule_id int [ref: > pet_rules.id]
+
+  [pk: property_id, pet_rule_id]
+}
+
+
