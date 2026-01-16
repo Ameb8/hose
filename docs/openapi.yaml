@@ -90,6 +90,31 @@ paths:
           description: Invalid query parameter
         '500':
           description: Internal server error
+    post:
+      summary: Create a new property
+      description: Create a new property listing (authenticated users only)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Property'
+      responses:
+        '201':
+          description: Property created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '400':
+          description: Invalid input
+
           
   # Query full property data by ID
   /properties/{id}:
@@ -113,6 +138,65 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Property'
+        '404':
+          description: Property not found
+        '500':
+          description: Internal server error
+    patch:
+      summary: Update a property
+      description: Modify an existing property. Only accessible to authenticated admin users.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the property to update
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Property'
+      responses:
+        '200':
+          description: Property updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+        '400':
+          description: Invalid input
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Property not found
+        '500':
+          description: Internal server error
+
+    delete:
+      summary: Delete a property
+      description: Remove a property by ID. Only accessible to authenticated admin users.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the property to delete
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Property deleted successfully (no content)
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
           description: Property not found
         '500':
@@ -230,7 +314,12 @@ paths:
 
 
 components:
-  schemas:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
     PropertyDTO:
       type: object
       description: Lightweight representation of a property
