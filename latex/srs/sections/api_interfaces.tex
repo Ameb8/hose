@@ -176,3 +176,91 @@ Retrieves and manages rental property information stored in the system database.
 \item Invalid search parameters 
 
 \end{itemize} 
+
+
+
+
+
+\subsection{Interface Data}
+
+
+\begin{longtable}{|c|p{12cm}|}
+\caption{Data Items Sent to the API} \label{tab:data_sent_api} \\
+\hline
+\textbf{Datatype and Size / Field} & \textbf{Comments} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Datatype and Size / Field} & \textbf{Comments} \\
+\hline
+\endhead
+
+\multicolumn{2}{|c|}{\textbf{Places API}} \\
+\hline
+Query & String (255 char) - Search itemed \\
+Location & LatLng (Float, Float) - City to zone for \\
+radius & String - Search radius \\
+type & String - Place type \\
+Key & String - Google Maps API Key \\
+\hline
+\multicolumn{2}{|c|}{\textbf{Geocoding API}} \\
+\hline
+address & String - Full address \\
+region & String (2 char) - Country code \\
+Key & String \\
+\hline
+\multicolumn{2}{|c|}{\textbf{Routes \& Transit API}} \\
+\hline
+Origin.latLng & Object (2 floats) - Start point \\
+Destination.latLng & Object (2 floats) - End point \\
+travelMode & Enum - Set to transit for route calculations and public transit availbility. \\
+departureTime & ISO-8601 DateTime - Default to current time \\
+routingPreference & Enum - Alter course based off preferences \\
+key & String - Google Maps API Key for transit \\
+\hline
+\end{longtable}
+
+
+\begin{longtable}{|l|p{12cm}|}  
+\caption{Data Items Returned by the API} \label{tab:data_returned_api} \\
+\hline
+\textbf{Datatype and Size / Field} & \textbf{Comments} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Datatype and Size / Field} & \textbf{Comments} \\
+\hline
+\endhead
+
+\multicolumn{2}{|c|}{\textbf{Places API}} \\
+\hline
+\texttt{Place\_id} & String - Unique ID \\
+\texttt{Name} & String - Property name \\
+\texttt{Formatted\_address} & String - Address in readable form \\
+\texttt{Geometry.location.lat} & Float - Latitude \\
+\texttt{Geometry.location.lng} & Float - Longitude \\
+\texttt{types} & Array[String] - Place categories \\
+\texttt{rating} & Float (0->5) - Rating for property, unused for now \\
+\texttt{User\_ratings\_total} & integer - Ratings for property unused for now \\
+\hline
+\multicolumn{2}{|c|}{\textbf{Geocoding API}} \\
+\hline
+\texttt{Formatted\_address} & String \\
+\texttt{address} & ~ \\
+\texttt{Place\_id} & String - Google’s place reference \\
+\texttt{Address\_components} & Array - City, state, postal code \\
+\hline
+\multicolumn{2}{|c|}{\textbf{Routes \& Transit API}} \\
+\hline
+\texttt{Routes[].duration} & String - Total travel time \\
+\texttt{Routes[].distanceMeters} & Integer - Distance (meters) \\
+\texttt{Legs[].steps[].travelMode} & Enum - Walk vs Transit \\
+\texttt{TransitDetails.line.vehicle.type} & Enum - Bus, Subway, or Train \\
+\texttt{TransitDetails.line.name} & String - Transit line name \\
+\texttt{DepartureStop.name} & String - Ending Stop \\
+\texttt{ArrivalStop.name} & String - Starting Stop \\
+\texttt{DepartureTime} & DateTime - Scheduled transit time \\
+\texttt{Polyline.encodedPolyline} & String - Path for map display \\
+\hline
+\end{longtable}
+
