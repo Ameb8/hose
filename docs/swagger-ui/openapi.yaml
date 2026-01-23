@@ -93,7 +93,7 @@ paths:
       summary: Create a new property
       description: Create a new property listing (authenticated users only)
       security:
-        - bearerAuth: []
+        - adminApiKey: []
       requestBody:
         required: true
         content:
@@ -147,7 +147,7 @@ paths:
       summary: Update a property
       description: Modify an existing property. Only accessible to authenticated admin users.
       security:
-        - bearerAuth: []
+        - adminApiKey: []
       parameters:
         - name: propertyID
           in: path
@@ -184,7 +184,7 @@ paths:
       summary: Delete a property
       description: Remove a property by ID. Only accessible to authenticated admin users.
       security:
-        - bearerAuth: []
+        - adminApiKey: []
       parameters:
         - name: propertyID
           in: path
@@ -210,7 +210,7 @@ paths:
       summary: Upload a new image for a property
       description: Admin-only endpoint to add an image to a property.
       security:
-        - bearerAuth: []
+        - adminApiKey: []
       parameters:
         - name: propertyID
           in: path
@@ -258,7 +258,7 @@ paths:
       summary: Delete an image from a property
       description: Admin-only endpoint to remove an image.
       security:
-        - bearerAuth: []
+        - adminApiKey: []
       parameters:
         - name: propertyID
           in: path
@@ -290,7 +290,7 @@ paths:
       summary: Set a property image as the thumbnail
       description: Admin-only endpoint to mark a specific image as the property's thumbnail. Automatically unsets any previous thumbnail.
       security:
-        - bearerAuth: []
+        - adminApiKey: []
       parameters:
         - name: propertyID
           in: path
@@ -409,10 +409,10 @@ paths:
 
 components:
   securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
+    adminApiKey:
+      type: apiKey
+      scheme: header
+      bearerFormat: X-API-Key
 
   schemas:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
     PropertyDTO:
@@ -559,19 +559,54 @@ components:
           format: date-time
           example: "2026-01-16T12:34:56Z"
 
-    GeoJSONFeatureCollection:
+    DestinationProperties:
       type: object
+      description: Base destination properties
       required:
+        - id
+        - name
         - type
-        - features
       properties:
+        id:
+          type: integer
+        name:
+          type: string
         type:
           type: string
-          example: FeatureCollection
-        features:
-          type: array
-          items:
-            $ref: '#/components/schemas/GeoJSONFeature'
+          enum: [property, cwu, bus_stop, other]
+        description:
+          type: string
+          example: "Quiet student-friendly housing near campus."
+        thumbnailUrl:
+          type: string
+          example: "/images/prop_123.jpg"
+
+    PropertyDestination:
+      allOf:
+        - $ref: '#/components/schemas/DestinationProperties'
+        - type: object
+          description: Property-specific destination with full Property data
+          required:
+            - property
+          properties:
+            property:
+              $ref: '#/components/schemas/Property'
+
+    NonPropertyDestination:
+      allOf:
+        - $ref: '#/components/schemas/DestinationProperties'
+
+    GeoJSONFeatureProperties:
+      oneOf:
+        - $ref: '#/components/schemas/PropertyDestination'
+        - $ref: '#/components/schemas/NonPropertyDestination'
+      discriminator:
+        propertyName: type
+        mapping:
+          property: '#/components/schemas/PropertyDestination'
+          cwu: '#/components/schemas/NonPropertyDestination'
+          bus_stop: '#/components/schemas/NonPropertyDestination'
+          other: '#/components/schemas/NonPropertyDestination'
 
     GeoJSONFeature:
       type: object
@@ -598,26 +633,18 @@ components:
                 type: number
               example: [-120.546, 46.996]
         properties:
-          type: object
-          description: >
-            Minimal information for fast map loading. Includes id, name, type, and optional description.
-          required:
-            - id
-            - name
-            - type
-          properties:
-            id:
-              type: integer
-              example: 123
-            name:
-              type: string
-              example: "Pine Street Apartments"
-            type:
-              type: string
-              enum: [property, cwu, bus_stop, other]
-            description:
-              type: string
-              example: "Quiet student-friendly housing near campus."
-            thumbnailUrl:
-              type: string
-              example: "/images/prop_123.jpg"
+          $ref: '#/components/schemas/GeoJSONFeatureProperties'
+
+    GeoJSONFeatureCollection:
+      type: object
+      required:
+        - type
+        - features
+      properties:
+        type:
+          type: string
+          example: FeatureCollection
+        features:
+          type: array
+          items:
+            $ref: '#/components/schemas/GeoJSONFeature'
