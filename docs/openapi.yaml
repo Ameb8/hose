@@ -93,7 +93,7 @@ paths:
       summary: Create a new property
       description: Create a new property listing (authenticated users only)
       security:
-        - bearerAuth: []
+        - adminApiKey: []
       requestBody:
         required: true
         content:
@@ -147,7 +147,7 @@ paths:
       summary: Update a property
       description: Modify an existing property. Only accessible to authenticated admin users.
       security:
-        - bearerAuth: []
+        - adminApiKey: []
       parameters:
         - name: propertyID
           in: path
@@ -184,7 +184,7 @@ paths:
       summary: Delete a property
       description: Remove a property by ID. Only accessible to authenticated admin users.
       security:
-        - bearerAuth: []
+        - adminApiKey: []
       parameters:
         - name: propertyID
           in: path
@@ -210,7 +210,7 @@ paths:
       summary: Upload a new image for a property
       description: Admin-only endpoint to add an image to a property.
       security:
-        - bearerAuth: []
+        - adminApiKey: []
       parameters:
         - name: propertyID
           in: path
@@ -258,7 +258,7 @@ paths:
       summary: Delete an image from a property
       description: Admin-only endpoint to remove an image.
       security:
-        - bearerAuth: []
+        - adminApiKey: []
       parameters:
         - name: propertyID
           in: path
@@ -290,7 +290,7 @@ paths:
       summary: Set a property image as the thumbnail
       description: Admin-only endpoint to mark a specific image as the property's thumbnail. Automatically unsets any previous thumbnail.
       security:
-        - bearerAuth: []
+        - adminApiKey: []
       parameters:
         - name: propertyID
           in: path
@@ -409,10 +409,10 @@ paths:
 
 components:
   securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
+    adminApiKey:
+      type: apiKey
+      scheme: header
+      bearerFormat: X-API-Key
 
   schemas:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
     PropertyDTO:
