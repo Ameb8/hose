@@ -197,25 +197,25 @@ Retrieves and manages rental property information stored in the system database.
 
 \multicolumn{2}{|c|}{\textbf{Places API}} \\
 \hline
-Query & String (255 char) - Search itemed \\
-Location & LatLng (Float, Float) - City to zone for \\
-radius & String - Search radius \\
-type & String - Place type \\
+Query & String (255 char) - Search itemed \\ \hline
+Location & LatLng (Float, Float) - City to zone for \\ \hline
+radius & String - Search radius \\ \hline
+type & String - Place type \\ \hline
 Key & String - Google Maps API Key \\
 \hline
 \multicolumn{2}{|c|}{\textbf{Geocoding API}} \\
 \hline
-address & String - Full address \\
-region & String (2 char) - Country code \\
+address & String - Full address \\ \hline
+region & String (2 char) - Country code \\ \hline
 Key & String \\
 \hline
 \multicolumn{2}{|c|}{\textbf{Routes \& Transit API}} \\
 \hline
-Origin.latLng & Object (2 floats) - Start point \\
-Destination.latLng & Object (2 floats) - End point \\
-travelMode & Enum - Set to transit for route calculations and public transit availbility. \\
-departureTime & ISO-8601 DateTime - Default to current time \\
-routingPreference & Enum - Alter course based off preferences \\
+Origin.latLng & Object (2 floats) - Start point \\ \hline
+Destination.latLng & Object (2 floats) - End point \\ \hline
+travelMode & Enum - Set to transit for route calculations and public transit availability. \\ \hline
+departureTime & ISO-8601 DateTime - Default to current time \\ \hline
+routingPreference & Enum - Alter course based off preferences \\ \hline
 key & String - Google Maps API Key for transit \\
 \hline
 \end{longtable}
@@ -234,32 +234,32 @@ key & String - Google Maps API Key for transit \\
 
 \multicolumn{2}{|c|}{\textbf{Places API}} \\
 \hline
-\texttt{Place\_id} & String - Unique ID \\
-\texttt{Name} & String - Property name \\
-\texttt{Formatted\_address} & String - Address in readable form \\
-\texttt{Geometry.location.lat} & Float - Latitude \\
-\texttt{Geometry.location.lng} & Float - Longitude \\
-\texttt{types} & Array[String] - Place categories \\
-\texttt{rating} & Float (0->5) - Rating for property, unused for now \\
+\texttt{Place\_id} & String - Unique ID \\ \hline
+\texttt{Name} & String - Property name \\ \hline
+\texttt{Formatted\_address} & String - Address in readable form \\ \hline
+\texttt{Geometry.location.lat} & Float - Latitude \\ \hline
+\texttt{Geometry.location.lng} & Float - Longitude \\ \hline
+\texttt{types} & Array[String] - Place categories \\ \hline
+\texttt{rating} & Float (0->5) - Rating for property, unused for now \\ \hline
 \texttt{User\_ratings\_total} & integer - Ratings for property unused for now \\
 \hline
 \multicolumn{2}{|c|}{\textbf{Geocoding API}} \\
 \hline
-\texttt{Formatted\_address} & String \\
-\texttt{address} & ~ \\
-\texttt{Place\_id} & String - Google’s place reference \\
+\texttt{Formatted\_address} & String \\ \hline
+\texttt{address} & ~ \\ \hline
+\texttt{Place\_id} & String - Google’s place reference \\ \hline
 \texttt{Address\_components} & Array - City, state, postal code \\
 \hline
 \multicolumn{2}{|c|}{\textbf{Routes \& Transit API}} \\
 \hline
-\texttt{Routes[].duration} & String - Total travel time \\
-\texttt{Routes[].distanceMeters} & Integer - Distance (meters) \\
-\texttt{Legs[].steps[].travelMode} & Enum - Walk vs Transit \\
-\texttt{TransitDetails.line.vehicle.type} & Enum - Bus, Subway, or Train \\
-\texttt{TransitDetails.line.name} & String - Transit line name \\
-\texttt{DepartureStop.name} & String - Ending Stop \\
-\texttt{ArrivalStop.name} & String - Starting Stop \\
-\texttt{DepartureTime} & DateTime - Scheduled transit time \\
+\texttt{Routes[].duration} & String - Total travel time \\ \hline
+\texttt{Routes[].distanceMeters} & Integer - Distance (meters) \\ \hline
+\texttt{Legs[].steps[].travelMode} & Enum - Walk vs Transit \\ \hline
+\texttt{TransitDetails.line.vehicle.type} & Enum - Bus, Subway, or Train \\ \hline
+\texttt{TransitDetails.line.name} & String - Transit line name \\ \hline
+\texttt{DepartureStop.name} & String - Ending Stop \\ \hline
+\texttt{ArrivalStop.name} & String - Starting Stop \\ \hline
+\texttt{DepartureTime} & DateTime - Scheduled transit time \\ \hline
 \texttt{Polyline.encodedPolyline} & String - Path for map display \\
 \hline
 \end{longtable}
