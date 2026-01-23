@@ -1,0 +1,178 @@
+
+\subsection{Map and Distance API Interface} 
+
+  
+
+\textbf{Description:}   
+
+Provides geographic data, walking distances, and estimated travel times between rental properties and key locations such as Central Washington University and local hospitals. 
+
+  
+
+\textbf{Actors Involved:} 
+
+\begin{itemize} 
+
+\item HOSE Rental Application 
+
+\item External Map Service API 
+
+\end{itemize} 
+
+  
+
+\textbf{Inputs:} 
+
+\begin{itemize} 
+
+\item OriginLocation – String – Address or latitude/longitude of the starting point 
+
+\item DestinationLocation – String – Address or latitude/longitude of the destination 
+
+\item TravelMode – String – Mode of travel (walking, transit) 
+
+\end{itemize} 
+
+  
+
+\textbf{Outputs:} 
+
+\begin{itemize} 
+
+\item Distance – Float – Distance between locations in miles or kilometers 
+
+\item EstimatedTime – Integer – Estimated travel time in minutes 
+
+\item RouteData – JSON Object – Encoded route information for map rendering 
+
+\end{itemize} 
+
+  
+
+\textbf{Error Conditions:} 
+
+\begin{itemize} 
+
+\item Invalid address input 
+
+\item API request limit exceeded 
+
+\item Network failure 
+
+\end{itemize} 
+
+ 
+
+\subsection{AI Assistant API Interface} 
+
+  
+
+\textbf{Description:}   
+
+Enables natural-language interaction with users by processing rental-related queries and generating informational responses based on application data. 
+
+  
+
+\textbf{Actors Involved:} 
+
+\begin{itemize} 
+
+\item HOSE Rental Application 
+
+\item External LLM Service 
+
+\end{itemize} 
+
+  
+
+\textbf{Inputs:} 
+
+\begin{itemize} 
+
+\item UserQuery – String – Natural language question submitted by the user 
+
+\item ContextData – JSON Object – Relevant rental data retrieved from the database 
+
+\end{itemize} 
+
+  
+
+\textbf{Outputs:} 
+
+\begin{itemize} 
+
+\item AIResponse – String – Generated natural language response 
+
+\end{itemize} 
+
+  
+
+\textbf{Error Conditions:} 
+
+\begin{itemize} 
+
+\item Invalid or empty user query 
+
+\item LLM service unavailable 
+
+\item Response timeout 
+
+\end{itemize} 
+
+ 
+
+\subsection{Property Database API Interface} 
+
+  
+
+\textbf{Description:}   
+
+Retrieves and manages rental property information stored in the system database. 
+
+  
+
+\textbf{Actors Involved:} 
+
+\begin{itemize} 
+
+\item HOSE Rental Application 
+
+\item Property Database 
+
+\end{itemize} 
+
+  
+
+\textbf{Inputs:} 
+
+\begin{itemize} 
+
+\item SearchCriteria – JSON Object – Filter parameters such as price range and number of rooms 
+
+\item PropertyID – Integer – Unique identifier for a rental property 
+
+\end{itemize} 
+
+  
+
+\textbf{Outputs:} 
+
+\begin{itemize} 
+
+\item PropertyList – JSON Array – List of properties matching search criteria 
+
+\item PropertyDetails – JSON Object – Detailed information for a specific property 
+
+\end{itemize} 
+
+  
+
+\textbf{Error Conditions:} 
+
+\begin{itemize} 
+
+\item Database connection failure 
+
+\item Invalid search parameters 
+
+\end{itemize} 
