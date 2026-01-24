@@ -1,0 +1,21 @@
+FROM gradle:9.3-jdk21 AS builder
+
+WORKDIR /app
+
+# Copy Gradle wrapper files first for caching
+COPY gradle gradle
+COPY gradlew .
+COPY build.gradle.kts .
+COPY settings.gradle.kts .
+
+# Pre-download dependencies
+RUN ./gradlew build -x test --no-daemon || true
+
+# Copy source code
+COPY . .
+
+# Expose port
+EXPOSE 8080
+
+# Run Spring Boot in dev mode
+CMD ["./gradlew", "bootRun"]
