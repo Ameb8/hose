@@ -2,27 +2,29 @@
 *.env
 
 # IDE files
-.idea/
-.vscode/
+**/.idea/
+**/.vscode/
 
 # OS files
-.DS_Store
-Thumbs.db
+**/.DS_Store
+**/Thumbs.db
 
 # Build files
-/build/
-/target/
-/out/
-/dist/
-/bin/
+**/build/
+**/target/
+**/out/
+**/dist/
+**/bin/
 
 # Logs
 *.log
 
 # Gradle files
-/gradle/wrapper/gradle-wrapper.jar
+**/gradle/wrapper/gradle-wrapper.jar
+**/.gradle/
 /gradlew
 /gradlew.bat
+
 
 # Node
 /node_modules/
