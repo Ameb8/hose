@@ -1,5 +1,21 @@
 
 services:
+  hose-api:
+    build:
+      context: ./server/hose
+      dockerfile: Dockerfile.dev
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/hose_db
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./server/hose:/app
+      - ~/.gradle:/home/gradle/.gradle  # cache Gradle dependencies
+
   # Postgres DB container
   postgres:
     image: postgis/postgis:15-3.3
@@ -28,3 +44,4 @@ services:
 
 volumes:
   postgres_data:
+
