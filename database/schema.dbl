@@ -1,23 +1,20 @@
-// DRAFT SCHEMA V1
+// SCHEMA V2
 
 
-/*  Stores basic information for each property
- *  Much of the data for each property is stored in other tables through foreign keys
+
+/*  Stores physical properties (buildings, dorms, houses)
+ *  Represents a single map location
  */
 Table properties {
   id int [pk, increment]
-  name text
-  unit text
 
-  rent_cents int [not null]
-  bedrooms int [not null]
-  bathrooms int [not null]
-
-  contact_phone text
-  contact_mail text
+  name text [not null]
+  property_type text [not null, note: "apartment | dorm | house"]
 
   description text
-  availability_date date
+
+  contact_phone text
+  contact_email text
 
   address_id int [not null, ref: > addresses.id]
   destination_id int [unique, not null, ref: > destinations.id]
@@ -28,8 +25,34 @@ Table properties {
 
 
 
+/* Stores rentable unit configurations / floor plans
+ * One property can have many unit types
+ */
+Table unit_types {
+  id int [pk, increment]
+
+  property_id int [not null, ref: > properties.id]
+
+  name text [not null, note: "Studio, 2BR, Dorm Double, etc."]
+  bedrooms int [not null]
+  bathrooms int [not null]
+
+  rent_cents int [not null]
+
+  availability_date date
+  total_units int
+  available_units int
+
+  description text
+
+  created_at timestamp
+  updated_at timestamp
+}
+
+
+
 /*  Stores physical addresses for properties
- *  Multiple units/properties can share the same address
+ *  One-to-one relationship with destinations
  */
 Table addresses {
   id int [pk, increment]
@@ -57,10 +80,10 @@ Table destinations {
 
   name text [not null]
   type text [not null, note: "property | cwu | bus_stop | other"]
-
   description text
 
-  location geography [note: "PostGIS Point (lat/lng)"]
+  latitude double [not null, note: "Range -90 to 90"]
+  longitude double [not null, note: "Range -180 to 180"]
 
   created_at timestamp
   updated_at timestamp
