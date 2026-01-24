@@ -125,7 +125,7 @@ Table property_images {
  */
 Table lease_agreements {
   id int [pk, increment]
-  property_id int [ref: > properties.id]
+  property_id int [unique, ref: > properties.id]
 
   lease_type text [note: "e.g. 9-month, 12-month"]
   start_month text
