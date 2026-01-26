@@ -4,7 +4,8 @@
 
 ### Running Locally
 
-After cloning this git repository into your local files, a .env file must be created. `.env.example` can be copied exactly, but the resulting file must be named `.env` exactly in the project root. For example, running the following command from the project root will create a valid `.env` file:
+
+If Docker is installed, this project is very easy to run.  After installing Docker and cloning this git repository into your local files, a .env file must be created. `.env.example` can be copied exactly, but the resulting file must be named `.env` exactly in the project root. For example, running the following command from the project root will create a valid `.env` file:
 
 ```bash
 cp .env.example .env
