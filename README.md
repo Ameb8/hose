@@ -5,7 +5,14 @@
 ### Running Locally
 
 
-If Docker is installed, this project is very easy to run.  After installing Docker and cloning this git repository into your local files, a .env file must be created. `.env.example` can be copied exactly, but the resulting file must be named `.env` exactly in the project root. For example, running the following command from the project root will create a valid `.env` file:
+If Docker is installed, this project is very easy to run.  After installing Docker, you can clone the repository and navigate to the root directory with:
+
+```bash
+git clone https://github.com/ameb8/hose
+cd hose
+```
+
+Next, a .env file must be created to store project config values. `.env.example` can be copied exactly, but the resulting file must be named `.env` exactly in the project root. For example, running the following command from the project root will create a valid `.env` file:
 
 ```bash
 cp .env.example .env
