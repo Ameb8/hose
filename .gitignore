@@ -17,7 +17,7 @@
 **/bin/
 
 # Logs
-*.log
+*.log*
 
 # Gradle files
 **/gradle/wrapper/gradle-wrapper.jar
@@ -25,13 +25,11 @@
 /gradlew
 /gradlew.bat
 
-
 # Node
-/node_modules/
+**/node_modules/
 
 # LaTeX build artifacts
 *.aux
-*.log
 *.toc
 *.out
 *.lof
