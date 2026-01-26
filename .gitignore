@@ -44,3 +44,6 @@
 *.vrb
 *.xdv
 latex/**/*.pdf
+
+# Database files
+database/dumps/
