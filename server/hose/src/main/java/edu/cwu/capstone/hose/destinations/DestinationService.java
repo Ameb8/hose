@@ -13,34 +13,18 @@ import java.util.stream.Collectors;
 public class DestinationService {
 
     private final DestinationRepository destinationRepository;
-    private final PropertyMapper propertyMapper;
+    private final DestinationMapper destinationMapper;
 
     public DestinationService(DestinationRepository destinationRepository,
-                              PropertyMapper propertyMapper) {
+                              DestinationMapper destinationMapper) {
         this.destinationRepository = destinationRepository;
-        this.propertyMapper = propertyMapper;
+        this.destinationMapper = destinationMapper;
     }
 
-    public List<DestinationDTO> getAllDestinations() {
-        List<Destination> destinations = destinationRepository.findAllWithAddressAndProperty();
-
-        return destinations.stream().map(destination -> {
-            DestinationDTO dto = DestinationDTO.builder()
-                    .id(destination.getId())
-                    .name(destination.getName())
-                    .type(destination.getType().name())
-                    .description(destination.getDescription())
-                    .latitude(destination.getLatitude())
-                    .longitude(destination.getLongitude())
-                    .address(destination.getAddress())
-                    .build();
-
-            // Map property if exists
-            if(destination.getProperty() != null)
-                dto.setProperty(propertyMapper.toSummaryDTO(destination.getProperty()));
-            
-            return dto;
-        }).toList();
+        public List<DestinationDTO> getAllDestinations() {
+        return destinationMapper.toDTOs(
+                destinationRepository.findAllWithAddressAndProperty()
+        );
     }
 }
 

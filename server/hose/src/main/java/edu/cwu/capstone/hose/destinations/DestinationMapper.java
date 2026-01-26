@@ -9,17 +9,16 @@ import org.mapstruct.*;
 import java.util.List;
 
 
-@Mapper(componentModel = "spring", uses = PropertyMapper.class)
+@Mapper(
+    componentModel = "spring",
+    uses = PropertyMapper.class,
+    unmappedTargetPolicy = ReportingPolicy.ERROR
+)
 public interface DestinationMapper {
 
     @Mapping(target = "type", expression = "java(destination.getType().name())")
-    @Mapping(target = "property", expression = "java(mapProperty(destination))")
+    @Mapping(target = "property", source = "property")
     DestinationDTO toDTO(Destination destination);
 
     List<DestinationDTO> toDTOs(List<Destination> destinations);
-
-    default PropertySummaryDTO mapProperty(Destination destination) {
-        if (destination == null || destination.getId() == null) return null;
-        return destination.getProperty() != null ? null : null; 
-    }
 }
