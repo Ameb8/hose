@@ -14,7 +14,6 @@ The following database config values in the resulting `.env` file can optionally
 
 ```bash
 # PostgreSQL config
-DB_PORT=5432
 DB_USER=username
 DB_PASSWORD=password
 DB_NAME=hose_db
