@@ -1,5 +1,8 @@
 package edu.cwu.capstone.hose.walk_distances;
 
+import edu.cwu.capstone.hose.properties.Property;
+import edu.cwu.capstone.hose.destinations.Destination;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
