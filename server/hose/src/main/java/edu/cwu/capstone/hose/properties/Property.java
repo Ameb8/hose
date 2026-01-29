@@ -40,7 +40,7 @@ public class Property {
     @Column(name = "contact_email")
     private String contactEmail;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "destination_id", nullable = false, unique = true)
     private Destination destination;
 
@@ -65,7 +65,6 @@ public class Property {
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
-    
     private Set<PropertyWalkDistance> walkDistances;
 
 
