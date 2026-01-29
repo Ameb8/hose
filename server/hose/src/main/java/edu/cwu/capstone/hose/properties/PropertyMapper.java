@@ -16,6 +16,24 @@ import java.util.List;
 public interface PropertyMapper {
 
     // Full object (GET by PK)
+    @Mapping(
+        target = "busStopWalkDistances",
+        expression = """
+            java(
+            property.getWalkDistances() == null ? List.of() :
+            property.getWalkDistances().stream()
+                .filter(wd -> wd.getDestination() != null)
+                .map(wd -> edu.cwu.capstone.hose.walk_distances.dto.WalkDistanceDTO.builder()
+                    .destinationId(wd.getDestination().getId())
+                    .destinationName(wd.getDestination().getName())
+                    .walkingMiles(wd.getWalkingMiles())
+                    .walkingMinutes(wd.getWalkingMinutes())
+                    .build()
+                )
+                .toList()
+            )
+        """
+    )
     @Mapping(target = "propertyType",
              expression = "java(property.getPropertyType().name())")
     PropertyDTO toDTO(Property property);
@@ -33,5 +51,7 @@ public interface PropertyMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "unitTypes", ignore = true)
+    @Mapping(target = "walkDistances", ignore = true)
     void updatePropertyFromDTO(PropertyDTO dto, @MappingTarget Property entity);
+
 }

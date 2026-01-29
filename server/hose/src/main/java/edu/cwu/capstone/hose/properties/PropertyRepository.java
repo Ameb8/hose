@@ -13,10 +13,11 @@ import java.util.Optional;
 @Repository
 public interface PropertyRepository extends JpaRepository<Property, Long> {
     @Query("""
-        SELECT p
+        SELECT DISTINCT p
         FROM Property p
         LEFT JOIN FETCH p.unitTypes
-        WHERE p.id = :id
+        LEFT JOIN FETCH p.walkDistances wd
+        LEFT JOIN FETCH wd.destination d
     """)
-    Optional<Property> findByIdWithUnitTypes(@Param("id") Long id);
+    Optional<Property> findByIdFullPropertyData(@Param("id") Long id);
 }

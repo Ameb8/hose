@@ -3,6 +3,7 @@ package edu.cwu.capstone.hose.properties.dto;
 import java.util.List;
 
 import edu.cwu.capstone.hose.unit_types.dto.UnitTypeDTO;
+import edu.cwu.capstone.hose.walk_distances.dto.WalkDistanceDTO;
 import lombok.*;
 
 @Data
@@ -17,4 +18,5 @@ public class PropertyDTO {
     private String contactPhone;
     private String contactEmail;
     private List<UnitTypeDTO> unitTypes;
+    private List<WalkDistanceDTO> busStopWalkDistances;
 }
