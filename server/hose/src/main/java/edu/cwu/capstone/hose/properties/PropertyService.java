@@ -25,7 +25,7 @@ public class PropertyService {
     }
 
     public Optional<Property> getPropertyById(Long id) {
-        return repository.findById(id);
+        return repository.findByIdWithUnitTypes(id);
     }
 
     public Property createProperty(Property property) {

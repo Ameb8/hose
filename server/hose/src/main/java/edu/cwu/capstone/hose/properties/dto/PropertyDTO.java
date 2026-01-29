@@ -1,5 +1,8 @@
 package edu.cwu.capstone.hose.properties.dto;
 
+import java.util.List;
+
+import edu.cwu.capstone.hose.unit_types.dto.UnitTypeDTO;
 import lombok.*;
 
 @Data
@@ -13,4 +16,5 @@ public class PropertyDTO {
     private String description;
     private String contactPhone;
     private String contactEmail;
+    private List<UnitTypeDTO> unitTypes;
 }
