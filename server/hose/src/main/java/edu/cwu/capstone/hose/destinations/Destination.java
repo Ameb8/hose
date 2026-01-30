@@ -39,7 +39,7 @@ public class Destination {
     @Column(nullable = false)
     private Double longitude;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "address_id")
     private Address address;
 

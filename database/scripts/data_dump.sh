@@ -26,23 +26,23 @@ DUMP_FILE="${DUMP_DIR}/data_dump_${TIMESTAMP}.sql"
 
 # Tables included in dump file
 TABLES=(
-  addresses
-  destinations
-  properties
-  unit_types
-  property_walk_distances
-  property_images
-  lease_agreements
-  pet_policies
-  lease_rules
-  pet_rules
-  lease_agreement_rules
-  property_pet_rules
+  public.addresses
+  public.destinations
+  public.properties
+  public.unit_types
+  public.property_walk_distances
+  public.property_images
+  public.lease_agreements
+  public.pet_policies
+  public.lease_rules
+  public.pet_rules
+  public.lease_agreement_rules
+  public.property_pet_rules
 )
 
 # Convert TABLES string into -t args
 TABLE_ARGS=()
-for tbl in ${TABLES}; do
+for tbl in ${TABLES[@]}; do
   TABLE_ARGS+=( "-t" "${tbl}" )
 done
 

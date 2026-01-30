@@ -21,7 +21,7 @@ public class DestinationService {
         this.destinationMapper = destinationMapper;
     }
 
-        public List<DestinationDTO> getAllDestinations() {
+    public List<DestinationDTO> getAllDestinations() {
         return destinationMapper.toDTOs(
                 destinationRepository.findAllWithAddressAndProperty()
         );

@@ -2,14 +2,14 @@ package edu.cwu.capstone.hose.properties;
 
 import edu.cwu.capstone.hose.destinations.Destination;
 import edu.cwu.capstone.hose.unit_types.UnitType;
-
+import edu.cwu.capstone.hose.walk_distances.PropertyWalkDistance;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "properties")
@@ -40,7 +40,7 @@ public class Property {
     @Column(name = "contact_email")
     private String contactEmail;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "destination_id", nullable = false, unique = true)
     private Destination destination;
 
@@ -57,6 +57,15 @@ public class Property {
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
-    private List<UnitType> unitTypes;
+    private Set<UnitType> unitTypes;
+
+    @OneToMany(
+        mappedBy = "property",
+        fetch = FetchType.LAZY,
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    private Set<PropertyWalkDistance> walkDistances;
+
 
 }

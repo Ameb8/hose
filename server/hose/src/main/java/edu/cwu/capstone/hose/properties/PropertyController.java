@@ -3,12 +3,15 @@ package edu.cwu.capstone.hose.properties;
 
 import edu.cwu.capstone.hose.properties.PropertyService;
 import edu.cwu.capstone.hose.properties.PropertyMapper;
+import edu.cwu.capstone.hose.properties.dto.CreatePropertyRequest;
 import edu.cwu.capstone.hose.properties.dto.PropertyDTO;
 import edu.cwu.capstone.hose.properties.dto.PropertySummaryDTO;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,5 +39,13 @@ public class PropertyController {
         return service.getPropertyById(id)
                 .map(p -> ResponseEntity.ok(mapper.toDTO(p)))
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping
+    public ResponseEntity<PropertyDTO> createProperty(
+            @RequestBody CreatePropertyRequest request) {
+
+        Property property = service.createProperty(request);
+        return ResponseEntity.ok(mapper.toDTO(property));
     }
 }
