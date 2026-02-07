@@ -30,7 +30,9 @@ services:
 
   # Postgres DB container
   postgres:
-    image: postgis/postgis:15-3.3
+    build:
+      context: ./database 
+      dockerfile: Dockerfile
     container_name: my_postgres
     ports:
       - "${DB_PORT}:${DB_PORT}"
