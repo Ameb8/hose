@@ -32,6 +32,7 @@ public class Address {
     @Column(nullable = false)
     private String postalCode;
 
+    @Builder.Default
     @Column(nullable = false)
     private String country = "USA";
 
@@ -42,4 +43,13 @@ public class Address {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @Override
+    public String toString() {
+        return String.join(", ",
+                streetAddress != null ? streetAddress : "",
+                city != null ? city : "",
+                state != null ? state : "",
+                postalCode != null ? postalCode : "").replaceAll(", $", "");
+    }
 }

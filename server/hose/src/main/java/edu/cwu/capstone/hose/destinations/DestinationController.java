@@ -1,9 +1,12 @@
 package edu.cwu.capstone.hose.destinations;
 
 import edu.cwu.capstone.hose.destinations.dto.DestinationDTO;
+import edu.cwu.capstone.hose.destinations.GeoJsonMapper;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/destinations")
@@ -16,7 +19,7 @@ public class DestinationController {
     }
 
     @GetMapping
-    public List<DestinationDTO> getAllDestinations() {
-        return service.getAllDestinations();
+    public Map<String, Object> getAllDestinations() {
+        return service.getGeoJson();
     }
 }

@@ -15,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class PropertySummaryDTO {
+    private Long id;
     private String name;
     private String propertyType;
     private String description;
