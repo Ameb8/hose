@@ -1,10 +1,13 @@
 package edu.cwu.capstone.hose.properties.dto;
 
-import java.util.List;
 
 import edu.cwu.capstone.hose.unit_types.dto.UnitTypeDTO;
 import edu.cwu.capstone.hose.walk_distances.dto.WalkDistanceDTO;
+
 import lombok.*;
+
+import java.util.List;
+
 
 @Data
 @AllArgsConstructor
