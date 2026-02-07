@@ -42,6 +42,9 @@ dependencies {
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
 	annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
 
+    // Cloudinary Java SDK
+    implementation("com.cloudinary:cloudinary-http44:1.38.0")
+
     // Testing
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
