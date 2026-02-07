@@ -1,6 +1,7 @@
 package edu.cwu.capstone.hose.properties;
 
 import edu.cwu.capstone.hose.destinations.Destination;
+import edu.cwu.capstone.hose.property_images.PropertyImage;
 import edu.cwu.capstone.hose.unit_types.UnitType;
 import edu.cwu.capstone.hose.walk_distances.PropertyWalkDistance;
 import jakarta.persistence.*;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -66,6 +68,14 @@ public class Property {
         orphanRemoval = true
     )
     private Set<PropertyWalkDistance> walkDistances;
+
+    @OneToMany(
+        mappedBy = "property",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    @Builder.Default
+    private Set<PropertyImage> images = new HashSet<>();
 
 
 }

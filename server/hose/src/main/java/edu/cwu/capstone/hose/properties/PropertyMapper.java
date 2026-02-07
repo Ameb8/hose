@@ -2,6 +2,7 @@ package edu.cwu.capstone.hose.properties;
 
 import edu.cwu.capstone.hose.properties.dto.*;
 import edu.cwu.capstone.hose.unit_types.UnitTypeMapper;
+import edu.cwu.capstone.hose.property_images.PropertyImageMapper;
 
 import org.mapstruct.*;
 
@@ -10,7 +11,10 @@ import java.util.List;
 
 @Mapper(
     componentModel = "spring",
-    uses = UnitTypeMapper.class,
+    uses = {
+        UnitTypeMapper.class,
+        PropertyImageMapper.class
+    },
     unmappedTargetPolicy = ReportingPolicy.ERROR
 )
 public interface PropertyMapper {
@@ -36,6 +40,7 @@ public interface PropertyMapper {
     )
     @Mapping(target = "propertyType",
              expression = "java(property.getPropertyType().name())")
+    @Mapping(target = "images", source = "images")
     PropertyDTO toDTO(Property property);
 
     // Summary (GET all)
@@ -52,6 +57,7 @@ public interface PropertyMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "unitTypes", ignore = true)
     @Mapping(target = "walkDistances", ignore = true)
+    @Mapping(target = "images", ignore = true)
     void updatePropertyFromDTO(PropertyDTO dto, @MappingTarget Property entity);
 
 }

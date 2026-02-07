@@ -18,6 +18,7 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
         LEFT JOIN FETCH p.unitTypes
         LEFT JOIN FETCH p.walkDistances wd
         LEFT JOIN FETCH wd.destination d
+        LEFT JOIN FETCH p.images
         WHERE p.id = :id
     """)
     Optional<Property> findByIdFullPropertyData(@Param("id") Long id);
