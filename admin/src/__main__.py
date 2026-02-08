@@ -89,6 +89,7 @@ class CreatePropertyPage(ttk.Frame):
         form: ttk.Frame = ttk.Frame(self)
         form.pack(fill="x", padx=20)
 
+
         # Field definitions
         self.fields = {
             "name": tk.StringVar(),
@@ -99,14 +100,22 @@ class CreatePropertyPage(ttk.Frame):
             "latitude": tk.StringVar(),
             "longitude": tk.StringVar(),
             "street": tk.StringVar(),
-            "city": tk.StringVar(),
-            "state": tk.StringVar(),
-            "zip": tk.StringVar(),
+            "city": tk.StringVar(value='Ellensburg'),
+            "state": tk.StringVar(value='WA'),
+            "zip": tk.StringVar(value='98926'),
         }
 
+        # Property Type dropdown
+        ttk.Label(form, text="Property Type").grid(row=0, column=0, sticky="w", pady=2)
+        self.property_type_combobox = ttk.Combobox(form, textvariable=self.fields["propertyType"], 
+                                                   values=["dorm", "apartment", "house"], state="readonly")
+        self.property_type_combobox.grid(row=0, column=1, sticky="ew", pady=2)
+
+        # Collect text field inputs
         for i, (label, var) in enumerate(self.fields.items()):
-            ttk.Label(form, text=label).grid(row=i, column=0, sticky="w", pady=2)
-            ttk.Entry(form, textvariable=var).grid(row=i, column=1, sticky="ew", pady=2)
+            if label != "propertyType":  # Skip the propertyType field text parsing
+                ttk.Label(form, text=label).grid(row=i + 1, column=0, sticky="w", pady=2)
+                ttk.Entry(form, textvariable=var).grid(row=i + 1, column=1, sticky="ew", pady=2)
 
         form.columnconfigure(1, weight=1)
 
@@ -125,6 +134,9 @@ class CreatePropertyPage(ttk.Frame):
 
         # Collect form data into dictionary
         data: Dict[str, Any] = {k: v.get() for k, v in self.fields.items()}
+
+        # Convert propertyType to uppercase to match server ENUM
+        data["propertyType"] = data["propertyType"].upper()
 
         try: # Convert lat/long to floats 
             if data["latitude"]:
