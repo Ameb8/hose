@@ -1,52 +1,195 @@
-import PySimpleGUI as sg
+import tkinter as tk
+from tkinter import ttk
+from dotenv import load_dotenv
+
+import requests
+import threading
+import os
+import sys
+
+from typing import Type
+
+DEBUG: bool = False # Default to off
+
+# Check args for debug mode
+if "-d" in sys.argv or "--debug" in sys.argv:
+    DEBUG = True
 
 
-# Homepage 
-home = [
-    [sg.Text('HOSE Property Manager (Admin Only)')],
-    [sg.Button('Add New Property'), sg.Button('Manage Property Images')],
-    [sg.Button("Exit")]
-]
+# Debug mode enabled
+if DEBUG:
+    print("Debug mode is ON")
 
-create_property = [
-    [sg.Text('Create Property')],
-    
-]
+# Load .env file
+load_dotenv()  # Loads variables from .env
 
-image_manager = [
-    [sg.Text('Image Manager')],
-    [sg.Text('We\'re working on it .....')]
-]
+# Set API credentials and domain
+API_KEY: str = os.getenv("ADMIN_KEY")
+API_URL: str = "http://localhost:8080"
 
 
+class App(tk.Tk):
+    def __init__(self) -> None:
+        super().__init__()
 
-# Function to create the window
-def create_window(layout):
-    return sg.Window("HOSE Property Manager", layout, finalize=True)
+        self.title("HOSE Property Manager")
+        self.geometry("400x200")
 
+        container: ttk.Frame = ttk.Frame(self)
+        container.pack(fill="both", expand=True)
 
-# Create the window
-window = create_window(home)
+        self.frames = {}
 
+        for Page in (HomePage, CreatePropertyPage, ImageManagerPage):
+            frame: ttk.Frame = Page(container, self)
+            self.frames[Page] = frame
+            frame.grid(row=0, column=0, sticky="nsew")
 
-# Event loop
-while True:
-    # Collect user input
-    event, values = window.read()
+        self.show_frame(HomePage)
 
-    # Exit application
-    if event == sg.WIN_CLOSED or event == "Exit":
-        break
-    
-    # Navigate to new property page
-    if event == "Add New Property":
-        window.close()
-        window = create_window(create_property)
-    
-    # Navigate to image manager
-    if event == "Manage Property Images":
-        window.close()
-        window = create_window(image_manager)
+    def show_frame(self, page: Type[ttk.Frame]) -> None:
+        frame: ttk.Frame = self.frames[page]
+        frame.tkraise()
 
 
-window.close()
+class HomePage(ttk.Frame):
+    def __init__(self, parent: tk.Widget, controller: App) -> None:
+        super().__init__(parent)
+
+        ttk.Label(self, text="HOSE Property Manager (Admin Only)").pack(pady=10)
+
+        ttk.Button(
+            self,
+            text="Add New Property",
+            command=lambda: controller.show_frame(CreatePropertyPage)
+        ).pack(pady=5)
+
+        ttk.Button(
+            self,
+            text="Manage Property Images",
+            command=lambda: controller.show_frame(ImageManagerPage)
+        ).pack(pady=5)
+
+        ttk.Button(
+            self,
+            text="Exit",
+            command=controller.destroy
+        ).pack(pady=10)
+
+
+class CreatePropertyPage(ttk.Frame):
+    fields: dict[str, tk.StringVar]
+    status: ttk.Label
+
+    def __init__(self, parent: tk.Widget, controller: App) -> None:
+        super().__init__(parent)
+
+        ttk.Label(self, text="Create Property", font=("Arial", 14)).pack(pady=10)
+
+        form: ttk.Frame = ttk.Frame(self)
+        form.pack(fill="x", padx=20)
+
+        # Field definitions
+        self.fields = {
+            "name": tk.StringVar(),
+            "propertyType": tk.StringVar(),
+            "description": tk.StringVar(),
+            "contactPhone": tk.StringVar(),
+            "contactEmail": tk.StringVar(),
+            "latitude": tk.StringVar(),
+            "longitude": tk.StringVar(),
+            "street": tk.StringVar(),
+            "city": tk.StringVar(),
+            "state": tk.StringVar(),
+            "zip": tk.StringVar(),
+        }
+
+        for i, (label, var) in enumerate(self.fields.items()):
+            ttk.Label(form, text=label).grid(row=i, column=0, sticky="w", pady=2)
+            ttk.Entry(form, textvariable=var).grid(row=i, column=1, sticky="ew", pady=2)
+
+        form.columnconfigure(1, weight=1)
+
+        self.status = ttk.Label(self, text="")
+        self.status.pack(pady=5)
+
+        ttk.Button(self, text="Submit", command=self.submit).pack(pady=5)
+        ttk.Button(
+            self,
+            text="Back",
+            command=lambda: controller.show_frame(HomePage)
+        ).pack(pady=5)
+
+    def submit(self) -> None:
+        self.status.config(text="Submitting...")
+
+        # Collect form data into dictionary
+        data: Dict[str, Any] = {k: v.get() for k, v in self.fields.items()}
+
+        try: # Convert lat/long to floats 
+            if data["latitude"]:
+                data["latitude"] = float(data["latitude"])
+            if data["longitude"]:
+                data["longitude"] = float(data["longitude"])
+        except ValueError:
+            self.status.config(text="Latitude/Longitude must be numbers")
+            return
+
+        threading.Thread(
+            target=self.make_request,
+            args=(data,),
+            daemon=True
+        ).start()
+
+
+    def make_request(self, data: dict[str, any]) -> None:
+        headers = {
+            "X-API-Key": API_KEY
+        }
+
+        if DEBUG: # Display request header/body
+            print(f'\n\nHeaders:\n\n{headers}')
+            print(f'\n\nPayload for POST request:\n\n{data}')
+
+
+        try: # Attempt to make POST request
+            response: requests.Response = requests.post(
+                f'{API_URL}/properties',
+                json=data,
+                headers=headers,
+                timeout=5
+            )
+
+            if DEBUG: # Display server response
+                print(f'\n\nResponse Status Code: {response.status_code}')
+                print(f'\nResponse Content:\n\n{response.json()}')
+
+            response.raise_for_status()
+
+            self.after(0, lambda: self.status.config(
+                text=f"Success: {response.json()}"
+            ))
+
+        except requests.RequestException as e:
+            self.after(0, lambda e=e: self.status.config(
+                text=f"Error: {e}"
+            ))
+
+
+class ImageManagerPage(ttk.Frame):
+    def __init__(self, parent: tk.Widget, controller: App) -> None:
+        super().__init__(parent)
+
+        ttk.Label(self, text="Image Manager").pack(pady=10)
+        ttk.Label(self, text="We're working on it .....").pack(pady=5)
+
+        ttk.Button(
+            self,
+            text="Back",
+            command=lambda: controller.show_frame(HomePage)
+        ).pack(pady=10)
+
+
+if __name__ == "__main__":
+    app: App = App()
+    app.mainloop()
