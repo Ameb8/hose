@@ -59,7 +59,8 @@ public class Property {
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
-    private Set<UnitType> unitTypes;
+    @Builder.Default
+    private Set<UnitType> unitTypes = new HashSet<>();
 
     @OneToMany(
         mappedBy = "property",
