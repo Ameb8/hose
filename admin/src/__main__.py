@@ -25,7 +25,7 @@ load_dotenv()  # Loads variables from .env
 
 # Set API credentials and domain
 API_KEY: str = os.getenv("ADMIN_KEY")
-API_URL: str = "http://localhost:8080"
+API_URL: str = os.getenv("SERVER_URL")
 
 
 class App(tk.Tk):
