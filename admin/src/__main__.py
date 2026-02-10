@@ -25,7 +25,7 @@ load_dotenv()  # Loads variables from .env
 
 # Set API credentials and domain
 API_KEY: str = os.getenv("ADMIN_KEY")
-API_URL: str = os.getenv("SERVER_URL")
+API_URL: str = "http://localhost:8080"
 
 
 class App(tk.Tk):
@@ -37,6 +37,9 @@ class App(tk.Tk):
 
         container: ttk.Frame = ttk.Frame(self)
         container.pack(fill="both", expand=True)
+
+        container.grid_rowconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
 
@@ -76,6 +79,44 @@ class HomePage(ttk.Frame):
             command=controller.destroy
         ).pack(pady=10)
 
+class ScrollableFrame(ttk.Frame):
+    def __init__(self, parent):
+        super().__init__(parent)
+
+        self.canvas = tk.Canvas(self, highlightthickness=0)
+        scrollbar = ttk.Scrollbar(self, orient="vertical", command=self.canvas.yview)
+
+        self.inner = ttk.Frame(self.canvas)
+
+        self.inner_id = self.canvas.create_window(
+            (0, 0), window=self.inner, anchor="nw"
+        )
+
+        self.canvas.configure(yscrollcommand=scrollbar.set)
+
+        self.canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+
+        # Update scroll region
+        self.inner.bind(
+            "<Configure>",
+            lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+        )
+
+        # Make inner frame follow canvas width
+        self.canvas.bind(
+            "<Configure>",
+            lambda e: self.canvas.itemconfig(self.inner_id, width=e.width)
+        )
+
+        # Mouse wheel scrolling
+        self.canvas.bind_all(
+            "<MouseWheel>",
+            lambda e: self.canvas.yview_scroll(int(-1 * (e.delta / 120)), "units")
+        )
+
+
+
 
 class CreatePropertyPage(ttk.Frame):
     fields: dict[str, tk.StringVar]
@@ -84,11 +125,15 @@ class CreatePropertyPage(ttk.Frame):
     def __init__(self, parent: tk.Widget, controller: App) -> None:
         super().__init__(parent)
 
-        ttk.Label(self, text="Create Property", font=("Arial", 14)).pack(pady=10)
+        scroll = ScrollableFrame(self)
+        scroll.pack(fill="both", expand=True)
 
-        form: ttk.Frame = ttk.Frame(self)
+        content = scroll.inner
+
+        ttk.Label(content, text="Create Property", font=("Arial", 14)).pack(pady=10)
+
+        form: ttk.Frame = ttk.Frame(content)
         form.pack(fill="x", padx=20)
-
 
         # Field definitions
         self.fields = {
@@ -105,6 +150,20 @@ class CreatePropertyPage(ttk.Frame):
             "zip": tk.StringVar(value='98926'),
         }
 
+        # --- Unit Types Section ---
+        ttk.Label(content, text="Unit Types", font=("Arial", 12)).pack(pady=(15, 5))
+
+        self.unit_container = ttk.Frame(content)
+        self.unit_container.pack(fill="both", padx=20)
+
+        self.unit_forms: list[UnitTypeForm] = []
+
+        ttk.Button(
+            content,
+            text="+ Add Unit Type",
+            command=self.add_unit_type
+        ).pack(pady=5)
+
         # Property Type dropdown
         ttk.Label(form, text="Property Type").grid(row=0, column=0, sticky="w", pady=2)
         self.property_type_combobox = ttk.Combobox(form, textvariable=self.fields["propertyType"], 
@@ -119,15 +178,21 @@ class CreatePropertyPage(ttk.Frame):
 
         form.columnconfigure(1, weight=1)
 
-        self.status = ttk.Label(self, text="")
+        self.status = ttk.Label(content, text="")
         self.status.pack(pady=5)
 
-        ttk.Button(self, text="Submit", command=self.submit).pack(pady=5)
+        ttk.Button(content, text="Submit", command=self.submit).pack(pady=5)
         ttk.Button(
-            self,
+            content,
             text="Back",
             command=lambda: controller.show_frame(HomePage)
         ).pack(pady=5)
+
+    def add_unit_type(self) -> None:
+        form = UnitTypeForm(self.unit_container)
+        form.pack(fill="x", pady=5)
+        self.unit_forms.append(form)
+
 
     def submit(self) -> None:
         self.status.config(text="Submitting...")
@@ -143,8 +208,14 @@ class CreatePropertyPage(ttk.Frame):
                 data["latitude"] = float(data["latitude"])
             if data["longitude"]:
                 data["longitude"] = float(data["longitude"])
-        except ValueError:
-            self.status.config(text="Latitude/Longitude must be numbers")
+
+            # Collect unit types
+            data["unitTypes"] = [
+                form.get_data()
+                for form in self.unit_forms
+            ]
+        except ValueError as e:
+            self.status.config(text=str(e))
             return
 
         threading.Thread(
@@ -200,6 +271,45 @@ class ImageManagerPage(ttk.Frame):
             text="Back",
             command=lambda: controller.show_frame(HomePage)
         ).pack(pady=10)
+
+
+class UnitTypeForm(ttk.Frame):
+    def __init__(self, parent):
+        super().__init__(parent, relief="ridge", padding=8)
+
+        self.vars = {
+            "name": tk.StringVar(),
+            "bedrooms": tk.StringVar(),
+            "bathrooms": tk.StringVar(),
+            "rentCents": tk.StringVar(),
+            "availabilityDate": tk.StringVar(),
+            "totalUnits": tk.StringVar(),
+            "availableUnits": tk.StringVar(),
+            "description": tk.StringVar(),
+        }
+
+        for i, (label, var) in enumerate(self.vars.items()):
+            ttk.Label(self, text=label).grid(row=i, column=0, sticky="w", pady=2)
+            ttk.Entry(self, textvariable=var).grid(row=i, column=1, sticky="ew", pady=2)
+
+        self.columnconfigure(1, weight=1)
+
+    def get_data(self) -> dict:
+        """Convert fields into correct JSON-ready types"""
+        try:
+            return {
+                "name": self.vars["name"].get(),
+                "bedrooms": int(self.vars["bedrooms"].get()),
+                "bathrooms": int(self.vars["bathrooms"].get()),
+                "rentCents": int(self.vars["rentCents"].get()),
+                "availabilityDate": self.vars["availabilityDate"].get(),
+                "totalUnits": int(self.vars["totalUnits"].get()),
+                "availableUnits": int(self.vars["availableUnits"].get()),
+                "description": self.vars["description"].get(),
+            }
+        except ValueError:
+            raise ValueError("Invalid numeric value in unit type")
+
 
 
 if __name__ == "__main__":
