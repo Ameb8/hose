@@ -51,15 +51,14 @@ services:
   osrm:
     image: osrm/osrm-backend
     container_name: osrm
-    command: >
-      sh -c "osrm-extract -p /opt/car.lua /data/kittitas-latest.osm.pbf &&
-             osrm-partition /data/kittitas-latest.osrm &&
-             osrm-customize /data/kittitas-latest.osrm &&
-             osrm-routed --algorithm mld /data/kittitas-latest.osrm"
+    command: osrm-routed --algorithm mld /data/ellensburg.osrm
     volumes:
-      - ./data:/data
+      - ./osrm/data:/data
     ports:
       - "5000:5000"
+    networks:
+      - backend
+
 
 networks:
   backend:
