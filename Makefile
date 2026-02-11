@@ -10,6 +10,10 @@ PROD_FILE=-f docker-compose.prod.yml
 dev:
 	$(COMPOSE) $(BASE_FILE) $(DEV_FILE) up --build
 
+# Build and run development config
+dev-build:
+	$(COMPOSE) $(BASE_FILE) $(DEV_FILE) up --build
+
 # Run in production config
 prod:
 	$(COMPOSE) $(BASE_FILE) $(PROD_FILE) up --build -d
