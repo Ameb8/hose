@@ -20,6 +20,17 @@ services:
       - ./server/hose:/app
       - ~/.gradle:/home/gradle/.gradle
 
+  osrm:
+    image: osrm/osrm-backend
+    container_name: osrm
+    command: osrm-routed --algorithm mld /data/ellensburg.osrm
+    volumes:
+      - ./osrm/data:/data
+    ports:
+      - "5001:5000"
+    networks:
+      - backend
+
   postgres:
     ports:
       - "5432:5432"
