@@ -1,13 +1,33 @@
 spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:default} 
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/hose_db}
-    username: ${SPRING_DATASOURCE_USERNAME:postgres}
-    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: validate
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
-        format_sql: true
+        format_sql: false 
+
+server:
+  port: 8080
+  error:
+    include-stacktrace: never
+    include-message: never
+  tomcat:
+    max-connections: 100
+    connection-timeout: 5000
+  max-http-header-size: 8KB
+  max-swallow-size: 5MB
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health 
+      base-path: /actuator
