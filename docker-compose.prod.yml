@@ -1,0 +1,17 @@
+services:
+  hose-api:
+    restart: unless-stopped
+
+  postgres:
+    restart: unless-stopped
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    command: tunnel run
+    restart: unless-stopped
+    depends_on:
+      - hose-api
+    volumes:
+      - ~/.cloudflared:/etc/cloudflared
+    networks:
+      - backend
