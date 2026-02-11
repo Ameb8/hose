@@ -63,3 +63,4 @@ server/test_requests/payloads/
 
 # OSRM preprocessed data
 *.osrm.*
+*.osrm
