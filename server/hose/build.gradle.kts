@@ -46,7 +46,7 @@ dependencies {
     implementation("com.cloudinary:cloudinary-http44:1.38.0")
 
     // Rate limiting
-    implementation("com.github.vladimir-bukhtoyarov:bucket4j-core:8.2.0")
+    implementation("com.github.vladimir-bukhtoyarov:bucket4j-core:8.2.1")
 
     // Testing
     testImplementation("org.springframework.boot:spring-boot-starter-test")
