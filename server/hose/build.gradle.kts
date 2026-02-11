@@ -45,6 +45,9 @@ dependencies {
     // Cloudinary Java SDK
     implementation("com.cloudinary:cloudinary-http44:1.38.0")
 
+    // Rate limiting
+    implementation("com.github.vladimir-bukhtoyarov:bucket4j-core:8.2.0")
+
     // Testing
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
