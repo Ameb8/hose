@@ -4,7 +4,7 @@ BASE_FILE=-f docker-compose.yml
 DEV_FILE=-f docker-compose.dev.yml
 PROD_FILE=-f docker-compose.prod.yml
 
-.PHONY: dev dev-build prod build down logs logs-dev logs-build restart
+.PHONY: dev dev-build prod build down logs logs-dev logs-build restart osrm
 
 # Run in development config
 dev:
@@ -37,6 +37,9 @@ logs-dev:
 # View production logs
 logs-prod:
 	$(COMPOSE) $(BASE_FILE) $(PROD_FILE) logs -f
+
+osrm:
+	$(COMPOSE) $(BASE_FILE) $(DEV_FILE) up -d osrm
 
 # Restart services
 restart:
