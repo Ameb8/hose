@@ -1,3 +1,5 @@
+package edu.cwu.capstone.hose.config;
+
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Refill;
@@ -29,10 +31,14 @@ public class Bucket4jRateLimitingFilter extends OncePerRequestFilter {
 
         Bucket bucket = buckets.computeIfAbsent(ip, this::newBucket);
 
+        // DEBUG ****
+        System.out.println("Rate limit filter hit for IP: " + ip);
+
+
         if(bucket.tryConsume(1)) { // Allow request
             filterChain.doFilter(request, response);
         } else { // Rate limit exceeded
-            response.setStatus(HttpServletResponse.SC_TOO_MANY_REQUESTS);
+            response.setStatus(429);
             response.getWriter().write("Too many requests. Slow down!");
         }
     }
