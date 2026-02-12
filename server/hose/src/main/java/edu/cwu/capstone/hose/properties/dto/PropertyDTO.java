@@ -1,6 +1,7 @@
 package edu.cwu.capstone.hose.properties.dto;
 
 
+import edu.cwu.capstone.hose.property_images.dto.PropertyImageDTO;
 import edu.cwu.capstone.hose.unit_types.dto.UnitTypeDTO;
 import edu.cwu.capstone.hose.walk_distances.dto.WalkDistanceDTO;
 
@@ -22,4 +23,5 @@ public class PropertyDTO {
     private String contactEmail;
     private List<UnitTypeDTO> unitTypes;
     private List<WalkDistanceDTO> busStopWalkDistances;
+    private List<PropertyImageDTO> images;
 }

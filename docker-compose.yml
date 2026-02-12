@@ -1,47 +1,35 @@
 
 services:
-  hose-webpage:
-    build:
-      context: ./client
-      dockerfile: Dockerfile.dev
-    ports:
-      - "5173:5173"
-    volumes:
-      - ./client:/app
-      - /app/node_modules
-    depends_on:
-      - hose-api
-
   hose-api:
     build:
       context: ./server/hose
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     depends_on:
       - postgres
-    ports:
-      - "8080:8080"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/hose_db
       SPRING_DATASOURCE_USERNAME: ${DB_USER}
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
-    volumes:
-      - ./server/hose:/app
-      - ~/.gradle:/home/gradle/.gradle  # cache Gradle dependencies
+      ADMIN_KEY: ${ADMIN_KEY}
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
+    networks:
+      - backend
 
   # Postgres DB container
   postgres:
     build:
       context: ./database 
       dockerfile: Dockerfile
-    container_name: my_postgres
-    ports:
-      - "${DB_PORT}:${DB_PORT}"
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend
 
   # Flyway service to manage DB and schema
   flyway:
@@ -55,6 +43,13 @@ services:
     command: -connectRetries=10 migrate
     volumes:
       - ./database/migrations:/flyway/sql
+    networks:
+      - backend
+
+
+networks:
+  backend:
+    driver: bridge
 
 volumes:
   postgres_data:

@@ -47,3 +47,20 @@ latex/**/*.pdf
 
 # Database files
 database/dumps/
+
+# Test example data
+server/test_requests/payloads/
+
+
+# Python files
+**/venv/
+**/.venv/
+*.pyc
+**/__pycache__/
+*.pyo
+*.pyd
+
+
+# OSRM preprocessed data
+*.osrm.*
+*.osrm

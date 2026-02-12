@@ -1,6 +1,12 @@
 package edu.cwu.capstone.hose.properties.dto;
 
+
+import edu.cwu.capstone.hose.unit_types.dto.CreateUnitTypeRequest;
+
 import lombok.Data;
+
+import java.util.List;
+
 
 @Data
 public class CreatePropertyRequest {
@@ -21,4 +27,7 @@ public class CreatePropertyRequest {
     private String city;
     private String state;
     private String zip;
+
+    // Unit Types
+    private List<CreateUnitTypeRequest> unitTypes;
 }

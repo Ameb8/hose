@@ -9,6 +9,7 @@ import edu.cwu.capstone.hose.properties.Property;
 import edu.cwu.capstone.hose.properties.PropertyRepository;
 import edu.cwu.capstone.hose.properties.dto.CreatePropertyRequest;
 import edu.cwu.capstone.hose.properties.dto.PropertyDTO;
+import edu.cwu.capstone.hose.unit_types.UnitType;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.Set;
 
 @Service
 public class PropertyService {
@@ -65,8 +68,28 @@ public class PropertyService {
             .destination(destination)
             .build();
 
-        // bidirectional safety (optional but good)
+        // Set field on destination object
         destination.setProperty(property);
+
+        if (req.getUnitTypes() != null && !req.getUnitTypes().isEmpty()) {
+        Set<UnitType> units = req.getUnitTypes().stream()
+            .map(ut -> UnitType.builder()
+                .property(property)
+                .name(ut.getName())
+                .bedrooms(ut.getBedrooms())
+                .bathrooms(ut.getBathrooms())
+                .rentCents(ut.getRentCents())
+                .availabilityDate(ut.getAvailabilityDate())
+                .totalUnits(ut.getTotalUnits())
+                .availableUnits(ut.getAvailableUnits())
+                .description(ut.getDescription())
+                .build()
+            )
+            .collect(Collectors.toSet());
+
+        property.setUnitTypes(units);
+    }
+
 
         return propertyRepository.save(property);
     }

@@ -1,0 +1,15 @@
+services:
+  hose-api:
+    restart: unless-stopped
+
+  postgres:
+    restart: unless-stopped
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    command: tunnel --no-autoupdate --url http://hose-api:8080
+    restart: unless-stopped
+    depends_on:
+      - hose-api
+    networks:
+      - backend
