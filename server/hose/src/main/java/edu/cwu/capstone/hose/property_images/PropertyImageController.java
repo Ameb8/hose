@@ -24,16 +24,30 @@ public class PropertyImageController {
 
     private final PropertyImageService service;
 
+    @Value("${ADMIN_KEY}")
+    private String validApiKey;
+
     public PropertyImageController(PropertyImageService service) {
         this.service = service;
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public PropertyImageDTO uploadImage(
+    public ResponseEntity<PropertyImageDTO> uploadImage(
         @PathVariable Long propertyId,
         @RequestPart("file") MultipartFile file,
-        @RequestParam(defaultValue = "false") boolean isThumbnail
+        @RequestParam(defaultValue = "false") boolean isThumbnail,
+        @RequestHeader(value = "X-API-Key", required = false) String key
     ) {
-        return service.uploadPropertyImage(propertyId, file, isThumbnail);
+        if(!isValidKey(key))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        PropertyImageDTO dto =
+                service.uploadPropertyImage(propertyId, file, isThumbnail);
+
+        return ResponseEntity.ok(dto);
+    }
+
+    private boolean isValidKey(String key) {
+        return key != null && validApiKey.equals(key);
     }
 }
