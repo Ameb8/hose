@@ -61,6 +61,6 @@ public class PropertyController {
     }
 
     private boolean isValidKey(String key) {
-        return validApiKey.equals(key);
+        return key != null && validApiKey.equals(key);
     }
 }
