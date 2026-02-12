@@ -9,6 +9,7 @@ The server is now hosted, and available at [this base url.](https://precisely-ca
 #### Endpoints Needed by Frontend:
 
 [GeoJSON Features](https://precisely-cave-inexpensive-cardiovascular.trycloudflare.com/destinations) (GET)
+
 [Detailed Property Info (change trailing int to any property's ID)](https://precisely-cave-inexpensive-cardiovascular.trycloudflare.com/properties/1) (GET)
 
 The URL may change periodically until a more permenant hosting solution is found. This document will be updated upon url change. Additionally, the server will periodically go down. In this scenario, running locally will allow testing of API interactions (see below).
@@ -43,6 +44,7 @@ make dev
 The initial run may take some time to build the container images, but subsequent runs will be faster. However, expect the server to take up to a minute to start up. A webpage showing results of an API call to the server can be accessed at [http://localhost:5173](http://localhost:5173). The page will automatically reload with code changes. On the same device in which the software was run, the rest endpoints required by the frontend are now:
 
 [GeoJSON Features](http://localhost:8080/destinations) (GET)
+
 [Detailed Property Info (change trailing int to any property's ID)](http://localhost:8080/properties/1) (GET)
 
 
