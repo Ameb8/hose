@@ -1,0 +1,164 @@
+<!-- HOSE desktop-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8"> 
+    <title>HOSE</title>
+    <meta name="referrer" content="no-referrer">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  </head>
+
+  <body>
+  <!-- HEADER -->
+  <div class="ellensburg-card">
+  <div class="top-row">
+    <!-- LEFT: Chat and Filter  -->
+    <div class="header-actions">
+      <!-- left side: chat button and chat open indicator (dynamic) -->
+      <div class="chat-section">
+        <button id="chatButton" class="chat-button">
+          <i class="fas fa-comment-dots"></i> Chat
+        </button>
+
+        <!--when chat is open, -->
+        <div id="chatOpenBadge" class="chat-status hidden">
+          <i class="fas fa-circle"></i> AI assistance 
+        </div>
+      </div>
+
+      <!-- filter toggle button (opens/closes filter panel) -->
+      <button id="filterToggleBtn" class="filter-toggle-btn">
+        <i class="fas fa-sliders-h"></i> Filter
+        <i class="fas fa-chevron-down" style="font-size: 0.85rem; opacity: 0.9;"></i>
+      </button>
+      </div>
+
+      <!-- RIGHT: App name -->
+    <div class="house-header">
+      <div class="house-title">
+        <span class="big-house">HO</span>
+        <span class="house-sub">using for </span>
+        <span class="big-house">S</span>
+        <span class="house-sub">tudents in </span>
+        <span class="big-house">E</span>
+        <span class="house-sub">llensburg 🏠</span>
+      </div>
+    </div>
+
+    <!-- FILTER PANEL (hidden by default, toggle with button) -->
+    <div id="filterPanel" class="filter-panel">
+      <div class="filter-content">
+         <!-- Price Range Slider -->
+    <div class="filter-section">
+      <div class="filter-header">
+        <i class="fas fa-dollar-sign"></i>
+        <h3>Price Range</h3>
+      </div>
+      <div class="price-range-container">
+        <div class="price-inputs">
+          <div class="price-field">
+            <label>Min</label>
+            <input type="number" id="minPrice" value="600" min="0" max="3000" step="50">
+          </div>
+          <div class="price-field">
+            <label>Max</label>
+            <input type="number" id="maxPrice" value="1800" min="0" max="3000" step="50">
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Rooms - 1+, 2+, 3+, 4+ -->
+    <div class="filter-section">
+      <div class="filter-header">
+        <i class="fas fa-bed"></i>
+        <h3>Rooms</h3>
+      </div>
+      <div class="room-buttons">
+        <button class="room-btn " data-rooms="1">1</button>
+        <button class="room-btn " data-rooms="2">2</button>
+        <button class="room-btn " data-rooms="3">3</button>
+        <button class="room-btn" data-rooms="4">4</button>
+      </div>
+    </div>
+
+    <!-- Pet Policy - Yes/No Toggle -->
+    <div class="filter-section">
+      <div class="filter-header">
+        <i class="fas fa-paw"></i>
+        <h3>Pet Policy</h3>
+      </div>
+      <div class="pet-toggle">
+        <button id="petYesBtn" class="pet-btn ">Yes: ✔️</button>
+        <button id="petNoBtn" class="pet-btn">No: ✖️</button>
+      </div>
+    </div>
+
+    <!-- Lease Type -->
+    <div class="filter-section">
+      <div class="filter-header">
+        <i class="fas fa-file-signature"></i>
+        <h3>Lease Type</h3>
+      </div>
+      <div class="lease-options">
+        <label class="lease-option">
+          <input type="radio" name="lease" value="month-to-month" checked>
+          <span>Month-to-Month</span>
+        </label>
+        <label class="lease-option">
+          <input type="radio" name="lease" value="yearly">
+          <span>Yearly</span>
+        </label>
+        <label class="lease-option">
+          <input type="radio" name="lease" value="both">
+          <span>Both</span>  <!-- I forgot the other lease type, will add on saturday -->
+        </label>
+      </div>
+    </div>
+
+    <!-- Distance from CWU -->
+    <div class="filter-section">
+      <div class="filter-header">
+        <i class="fas fa-location-dot"></i>
+        <h3>Distance from CWU</h3>
+      </div>
+      <div class="distance-inputs">
+        <div class="distance-field">
+          <label>Walking</label>
+          <div class="time-input">
+            <input type="number" id="walkingMin" value="5" min="0" max="60"> 
+            <span> - </span>
+            <input type="number" id="walkingMax" value="15" min="0" max="60">
+            <span>min</span>
+          </div>
+        </div>
+        <div class="distance-field">
+          <label>Transit</label>
+          <div class="time-input">
+            <input type="number" id="transitMin" value="10" min="0" max="60">
+            <span> - </span>
+            <input type="number" id="transitMax" value="30" min="0" max="60">
+            <span>min</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Apply Filters Button -->
+    <div class="filter-actions">
+      <button id="resetFiltersBtn" class="reset-btn">
+        <i class="fas fa-undo"></i> Reset
+      </button>
+      <button id="applyFilterBtn" class="filter-apply-btn">
+        <i class="fas fa-check"></i> Apply Filters
+      </button>
+    </div>
+       
+      </div>
+    </div>
+  <script src="buttons.js"></script>
+</body>
+</html>
