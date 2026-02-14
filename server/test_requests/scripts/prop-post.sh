@@ -11,7 +11,7 @@ export $(grep -v '^#' "$SCRIPT_DIR/../../../.env" | xargs)
 DATA_FILE="$1"
 
 # Make POST request for properties/
-curl -v -X POST "http://localhost:8080/properties" \
+curl -v -X POST "https://precisely-cave-inexpensive-cardiovascular.trycloudflare.com/properties" \
   -H "Content-Type: application/json" \
   -H "Accept: application/json" \
   -H "x-api-key: $ADMIN_KEY" \

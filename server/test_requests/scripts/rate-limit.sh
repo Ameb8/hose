@@ -1,6 +1,6 @@
 #!/bin/bash
 
-URL="http://localhost:8080/destinations"
+URL="https://precisely-cave-inexpensive-cardiovascular.trycloudflare.com/destinations"
 
 echo "Sending 10 requests..."
 for i in {1..10}; do
