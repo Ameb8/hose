@@ -55,36 +55,45 @@ async function initMap() {
         const icon = iconMap[feature.properties.type] || propertyIcon;
         return L.marker(latlng, { icon });
       },
+      // Make overlaid features clickable
       onEachFeature: (feature, layer) => {
-        // Bind click event to make API call on demand
-        layer.on("click", async (e) => {
-            // DEBUG *******
-            console.log("Full feature object:", feature);
-            console.log("Feature properties:", feature.properties);
-            console.log("Feature ID:", feature.id);
-            // END DEBUG ***
+        layer.on("click", async () => {
+          const type = feature.properties.type;
 
-          try {
-            // Replace `/destination/${id}` with your actual endpoint
-            const detailResponse = await fetch(`${API_BASE_URL}/properties/${feature.properties.property.id}`);
-            if (!detailResponse.ok) throw new Error("Failed to fetch details");
+          // Handle Property features
+          if (type === "PROPERTY") {
+            // Fetch full Property object
+            try {
+              const detailResponse = await fetch(`${API_BASE_URL}/properties/${feature.properties.property.id}`);
+              if (!detailResponse.ok) throw new Error("Failed to fetch details");
 
-            const detailData = await detailResponse.json();
+              const detailData = await detailResponse.json(); // Wait for response
 
-            // Format content for popup
-            const popupContent = `
-              <h3>${detailData.name}</h3>
-              <p><strong>Address:</strong> ${detailData.address}</p>
-              <p>${detailData.description}</p>
+              // Display property content
+              const popupContent = `
+                <h3>${detailData.name}</h3>
+                <p><strong>Address:</strong> ${detailData.address}</p>
+                <p>${detailData.description}</p>
+              `;
+
+              layer.bindPopup(popupContent).openPopup();
+            } catch (err) {
+              console.error("Error fetching feature details:", err);
+              layer.bindPopup("<p>Error loading property details</p>").openPopup();
+            }
+
+          // Handle bus stop features
+          } else if (type === "BUS_STOP") {
+            // Display bus stop info
+            const busPopupContent = `
+              <h3>Bus Stop</h3>
+              <p>Name: ${feature.properties.name || "Unknown"}</p>
+              <p>Address: ${feature.properties.address || "N/A"}</p>
             `;
-
-            layer.bindPopup(popupContent).openPopup();
-          } catch (err) {
-            console.error("Error fetching feature details:", err);
-            layer.bindPopup("<p>Error loading details</p>").openPopup();
+            layer.bindPopup(busPopupContent).openPopup();
           }
         });
-      },
+      }
     }).addTo(map);
 
     // Auto-zoom to features 
