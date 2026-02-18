@@ -42,7 +42,7 @@ public class GeoJsonMapper {
         properties.put("description", destination.getDescription() != null ? destination.getDescription() : "");
         properties.put("address", destination.getAddress() != null ? destination.getAddress().toString() : "");
 
-        if ("property".equals(destination.getType()) && destination.getProperty() != null)
+        if ("PROPERTY".equals(destination.getType()) && destination.getProperty() != null)
             properties.put("property", toProperty(destination.getProperty()));
 
         feature.put("properties", properties);

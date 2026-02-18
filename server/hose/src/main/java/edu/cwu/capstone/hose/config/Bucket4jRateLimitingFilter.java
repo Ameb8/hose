@@ -31,10 +31,6 @@ public class Bucket4jRateLimitingFilter extends OncePerRequestFilter {
 
         Bucket bucket = buckets.computeIfAbsent(ip, this::newBucket);
 
-        // DEBUG ****
-        System.out.println("Rate limit filter hit for IP: " + ip);
-
-
         if(bucket.tryConsume(1)) { // Allow request
             filterChain.doFilter(request, response);
         } else { // Rate limit exceeded

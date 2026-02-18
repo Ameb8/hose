@@ -1,31 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Hose UI</title>
-    <style>
-      body {
-        font-family: sans-serif;
-        padding: 2rem;
-      }
-      button {
-        padding: 0.5rem 1rem;
-        font-size: 1rem;
-      }
-      pre {
-        margin-top: 1rem;
-        padding: 1rem;
-        background: #f5f5f5;
-        max-height: 70vh;
-        overflow-y: auto;
-        white-space: pre-wrap;
-      }
-    </style>
-  </head>
-  <body>
-    <button id="fetchBtn">Fetch data</button>
-    <pre id="output"></pre>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>GeoJSON Map</title>
 
-    <script type="module" src="/src/main.js"></script>
-  </body>
+  <!-- Leaflet CSS -->
+  <link 
+    rel="stylesheet" 
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+    }
+    #map {
+      height: 100vh;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+
+<script src="map.js"></script>
+
+</body>
 </html>
