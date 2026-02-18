@@ -1,0 +1,239 @@
+[
+  {
+    "property_id": 1,
+    "name": "Wendell Hill Hall A",
+    "type": "dorm",
+    "description": "Wendell Hill Hall A is one of our two Wendell Hill residence halls with a modern set up and feel for our sophomore and up students. Nearby, students can find many outdoor recreation opportunities such as the tennis courts, basketball courts and field house. There is also a full-service coffee shop on the ground floor of Wendell B. Wendell Hill Hall A is home to the Music Living Learning Community, which is open to all music majors regardless of year.",
+    "contact_phone": "5099631831",
+    "contact_email": "housing@cwu.edu",
+    "units": [
+      {
+        "unit_id": 1,
+        "property_id": 1,
+        "name": "Double Room",
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "rent": 1048.33,
+        "available_units": null,
+        "description": "Shared unit with 2 residents and private bathroom."
+      },
+      {
+        "unit_id": 2,
+        "property_id": 1,
+        "name": "4-Person Suite",
+        "bedrooms": 4,
+        "bathrooms": 1,
+        "rent": 1166.66,
+        "available_units": null,
+        "description": "\\N"
+      },
+      {
+        "unit_id": 3,
+        "property_id": 1,
+        "name": "Double Suite",
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "rent": 1166.66,
+        "available_units": null,
+        "description": "\\N"
+      }
+    ]
+  },
+  {
+    "property_id": 2,
+    "name": "Sunset Ridge Apartments",
+    "type": "apartment",
+    "description": "A quiet residential property with mountain views and on-site parking.",
+    "contact_phone": "509-555-1234",
+    "contact_email": "manager@sunsetridge.com",
+    "units": []
+  },
+  {
+    "property_id": 3,
+    "name": "Verge Apartments",
+    "type": "apartment",
+    "description": "A quiet residential property with mountain views and on-site parking.",
+    "contact_phone": "509-555-1234",
+    "contact_email": "manager@sunsetridge.com",
+    "units": []
+  },
+  {
+    "property_id": 4,
+    "name": "Lomabard Hall",
+    "type": "dorm",
+    "description": "CWU hall",
+    "contact_phone": "123-456-7890",
+    "contact_email": "housing@cwu.edu",
+    "units": []
+  },
+  {
+    "property_id": 5,
+    "name": "Pine Ridge Apartments",
+    "type": "apartment",
+    "description": "Pine Ridge Apartments offer comfortable living just minutes from downtown Ellensburg. Residents enjoy modern interiors, on-site laundry, and easy access to nearby parks and public transit.",
+    "contact_phone": "5095557821",
+    "contact_email": "leasing@pineridgeapts.com",
+    "units": [
+      {
+        "unit_id": 4,
+        "property_id": 5,
+        "name": "One Bedroom Deluxe",
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "rent": 1125.0,
+        "available_units": "5",
+        "description": "Spacious one-bedroom unit with walk-in closet and private balcony."
+      },
+      {
+        "unit_id": 5,
+        "property_id": 5,
+        "name": "Two Bedroom Townhome",
+        "bedrooms": 2,
+        "bathrooms": 2,
+        "rent": 1490.0,
+        "available_units": "1",
+        "description": "Two-level townhome-style unit with in-unit washer/dryer and reserved parking."
+      },
+      {
+        "unit_id": 6,
+        "property_id": 5,
+        "name": "Studio Classic",
+        "bedrooms": 0,
+        "bathrooms": 1,
+        "rent": 925.0,
+        "available_units": "3",
+        "description": "Efficient studio layout with full kitchen and large windows for natural light."
+      }
+    ]
+  },
+  {
+    "property_id": 6,
+    "name": "Pine Ridge Apartments",
+    "type": "apartment",
+    "description": "Pine Ridge Apartments offer comfortable living just minutes from downtown Ellensburg. Residents enjoy modern interiors, on-site laundry, and easy access to nearby parks and public transit.",
+    "contact_phone": "5095557821",
+    "contact_email": "leasing@pineridgeapts.com",
+    "units": [
+      {
+        "unit_id": 7,
+        "property_id": 6,
+        "name": "Studio Classic",
+        "bedrooms": 0,
+        "bathrooms": 1,
+        "rent": 925.0,
+        "available_units": "3",
+        "description": "Efficient studio layout with full kitchen and large windows for natural light."
+      },
+      {
+        "unit_id": 8,
+        "property_id": 6,
+        "name": "Two Bedroom Townhome",
+        "bedrooms": 2,
+        "bathrooms": 2,
+        "rent": 1490.0,
+        "available_units": "1",
+        "description": "Two-level townhome-style unit with in-unit washer/dryer and reserved parking."
+      },
+      {
+        "unit_id": 9,
+        "property_id": 6,
+        "name": "One Bedroom Deluxe",
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "rent": 1125.0,
+        "available_units": "5",
+        "description": "Spacious one-bedroom unit with walk-in closet and private balcony."
+      }
+    ]
+  },
+  {
+    "property_id": 7,
+    "name": "Greenpointe Townhomes",
+    "type": "apartment",
+    "description": "Greenpointe Townhomes feature on-site maintenance, off-street parking, fenced private yards, pet-friendly units, new designer interiors, ceiling fans in bedrooms, new hard surface flooring, new carpets and paint, new hardware and fixtures, RUB utilities, and walking distance to Central Washington University and nearby parks. Pets allowed with restrictions and associated fees.",
+    "contact_phone": "5099685055",
+    "contact_email": "leasing@greenpointe.com",
+    "units": [
+      {
+        "unit_id": 10,
+        "property_id": 7,
+        "name": "3 Bed 3 Bath",
+        "bedrooms": 3,
+        "bathrooms": 3,
+        "rent": 1735.0,
+        "available_units": null,
+        "description": "\\N"
+      },
+      {
+        "unit_id": 11,
+        "property_id": 7,
+        "name": "2 Bed 1 Bath",
+        "bedrooms": 2,
+        "bathrooms": 2,
+        "rent": 1220.0,
+        "available_units": null,
+        "description": "\\N"
+      },
+      {
+        "unit_id": 12,
+        "property_id": 7,
+        "name": "2 Bed 2 Bath",
+        "bedrooms": 2,
+        "bathrooms": 2,
+        "rent": 1225.0,
+        "available_units": null,
+        "description": "\\N"
+      }
+    ]
+  },
+  {
+    "property_id": 8,
+    "name": "Central Park Apartments",
+    "type": "apartment",
+    "description": "Central Park Apartments offer modern amenities including a 24-hour emergency line, business center, clubhouse, fitness center, online rent payments, on-site maintenance & management, swimming pool, TV lounge, additional storage, dishwasher, garage with remote access, heating & air conditioning, modern kitchens, private balcony, refrigerator, spacious open floor plans, and in-unit washer & dryer. Pets are not allowed.",
+    "contact_phone": "5099251247",
+    "contact_email": "\\N",
+    "units": [
+      {
+        "unit_id": 13,
+        "property_id": 8,
+        "name": "4 Beds 3 Baths",
+        "bedrooms": 4,
+        "bathrooms": 3,
+        "rent": 2225.0,
+        "available_units": null,
+        "description": "\\N"
+      },
+      {
+        "unit_id": 14,
+        "property_id": 8,
+        "name": "3 Beds 2 Baths",
+        "bedrooms": 3,
+        "bathrooms": 2,
+        "rent": 2000.0,
+        "available_units": null,
+        "description": "\\N"
+      },
+      {
+        "unit_id": 15,
+        "property_id": 8,
+        "name": "2 Beds 2 Baths",
+        "bedrooms": 2,
+        "bathrooms": 2,
+        "rent": 1690.0,
+        "available_units": null,
+        "description": "\\N"
+      },
+      {
+        "unit_id": 16,
+        "property_id": 8,
+        "name": "1 Bed 1 Bath",
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "rent": 1535.0,
+        "available_units": null,
+        "description": "\\N"
+      }
+    ]
+  }
+]
