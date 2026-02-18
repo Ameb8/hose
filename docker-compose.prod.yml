@@ -13,3 +13,17 @@ services:
       - hose-api
     networks:
       - backend
+
+  osrm:
+    image: osrm-backend-arm
+    container_name: osrm
+    command: osrm-routed --algorithm mld /data/ellensburg.osrm
+    volumes:
+      - ./osrm/data:/data
+    ports:
+      - "5001:5000"
+    restart: unless-stopped
+    networks:
+      - backend
+
+  
