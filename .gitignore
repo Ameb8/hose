@@ -64,3 +64,9 @@ server/test_requests/payloads/
 # OSRM preprocessed data
 *.osrm.*
 *.osrm
+
+
+# Frontend
+*.asar
+node_modules/
+**/node_modules/
