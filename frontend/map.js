@@ -1,10 +1,17 @@
 document.addEventListener("DOMContentLoaded", initMap);
 
-
+// Constants
 const API_BASE_URL = "https://bestsellers-navigate-bone-this.trycloudflare.com"
 const DESTINATIONS_URL = "/destinations"
 
+
+// Global vars
 let HOSECardTemplate = null;
+let map;
+let routeMode = false;
+let selectedFeatures = [];
+let currentRouteLayer = null;
+
 
 function injectHOSECSS() {
   if (!document.getElementById("HOSECardCSS")) {
@@ -16,8 +23,10 @@ function injectHOSECSS() {
   }
 }
 
+
 // Inject CSS immediately on load
 injectHOSECSS();
+
 
 // Load card HTML as template
 async function loadHOSECardTemplate() {
@@ -145,7 +154,30 @@ function getBusStopPopupContent(feature) {
 function handleFeatureClick(feature, layer) {
   layer.on("click", async () => {
     const type = feature.properties.type;
+    const featureId = feature.properties.id;
     let popupContent = "";
+
+    if (routeMode) {
+      selectedFeatures.push(featureId);
+
+      layer.setOpacity(0.6);
+
+      if (selectedFeatures.length === 2) {
+        const [sourceId, destId] = selectedFeatures;
+
+        try {
+          const routeData = await fetchRoute(sourceId, destId);
+          drawRoute(routeData);
+        } catch (err) {
+          console.error("Route fetch failed:", err);
+        }
+
+        selectedFeatures = [];
+        routeMode = false;
+      }
+
+      return;
+    }
 
     // Handle Property features
     if (type === "PROPERTY") {
@@ -177,6 +209,42 @@ function handleFeatureClick(feature, layer) {
 }
 
 
+function addRouteControl() {
+  const RouteControl = L.Control.extend({
+    options: { position: "bottomleft" },
+
+    onAdd: function () {
+      const btn = L.DomUtil.create("button", "route-btn");
+      btn.innerHTML = "🧭 Route";
+      btn.style.background = "white";
+      btn.style.padding = "8px";
+      btn.style.cursor = "pointer";
+      btn.style.border = "1px solid #ccc";
+
+      L.DomEvent.disableClickPropagation(btn);
+
+      btn.onclick = function () {
+        routeMode = !routeMode;
+
+        btn.style.background = routeMode ? "#007bff" : "white";
+        btn.style.color = routeMode ? "white" : "black";
+
+        selectedFeatures = [];
+
+        if (!routeMode && currentRouteLayer) {
+          currentRouteLayer.remove();
+          currentRouteLayer = null;
+        }
+      };
+
+      return btn;
+    }
+  });
+
+  map.addControl(new RouteControl());
+}
+
+
 async function fetchData(endpoint) {
   const response = await fetch(`${API_BASE_URL}${endpoint}`);
   if (!response.ok) throw new Error("Failed to fetch " + endpoint);
@@ -184,9 +252,44 @@ async function fetchData(endpoint) {
 }
 
 
+async function fetchRoute(sourceId, destId) {
+  return fetchData(`/destinations/${sourceId}/${destId}/route`);
+}
+
+
+function drawRoute(routeData) {
+
+  // Remove previous route if exists
+  if (currentRouteLayer) {
+    currentRouteLayer.remove();
+  }
+
+  // Convert GeoJSON [lng, lat] → Leaflet [lat, lng]
+  const latlngs = routeData.geometry.coordinates.map(coord => [
+    coord[1],
+    coord[0]
+  ]);
+
+  currentRouteLayer = L.polyline(latlngs, {
+    color: "blue",
+    weight: 5
+  }).addTo(map);
+
+  // Zoom to route
+  map.fitBounds(currentRouteLayer.getBounds());
+
+  // Display info on pop-up
+  currentRouteLayer.bindPopup(`
+    <strong>Distance:</strong> ${(routeData.distance / 1000).toFixed(2)} km<br>
+    <strong>Duration:</strong> ${(routeData.duration / 60).toFixed(1)} minutes
+  `).openPopup();
+}
+
+
 async function initMap() {
   // Create map object
-  const map = createMap()
+  map = createMap();
+  addRouteControl();
 
   try {
     // Query GeoJSON features from server
@@ -199,7 +302,7 @@ async function initMap() {
     // Add GeoJSON to map
     const geojsonLayer = L.geoJSON(geojson, {
       pointToLayer: (feature, latlng) => {
-        const icon = iconMap[feature.properties.type] || propertyIcon;
+        const icon = iconMap[feature.properties.type];
         return L.marker(latlng, { icon });
       },
       // Make overlaid features clickable
