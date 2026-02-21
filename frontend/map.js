@@ -42,7 +42,20 @@ function showHOSECard(data) {
 
   // Fill in dynamic data
   const card = container.querySelector(".HOSE-card");
-  card.querySelector(".apt-card-image img").src = data.image || "./HOSE_Card/House.png";
+  const imageContainer = card.querySelector(".apt-card-image");
+  imageContainer.innerHTML = "";
+
+  if (data.images && data.images.length > 0) {
+    data.images.forEach(img => {
+      const imageEl = document.createElement("img");
+      imageEl.src = img.imageUrl;
+      imageContainer.appendChild(imageEl);
+    });
+  } else {
+    const fallback = document.createElement("img");
+    fallback.src = "./HOSE_Card/House.png";
+    imageContainer.appendChild(fallback);
+  }
   card.querySelector(".apt-panel-header h2").textContent = data.name || "Unknown";
   const spans = card.querySelectorAll(".apt-panel-header span");
   if (spans.length >= 2) {
@@ -144,7 +157,7 @@ function handleFeatureClick(feature, layer) {
 
       // Show HOSE card modal
       showHOSECard({
-        image: detailData.images?.[0]?.imageUrl || "./HOSE_Card/House.png",
+        images: detailData.images || [],
         name: detailData.name,
         distance: "N/A",
         address: detailData.address || "Unknown",
