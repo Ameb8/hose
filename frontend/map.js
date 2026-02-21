@@ -1,15 +1,14 @@
 document.addEventListener("DOMContentLoaded", initMap);
 
+
 const API_BASE_URL = "https://bestsellers-navigate-bone-this.trycloudflare.com"
+const DESTINATIONS_URL = "/destinations"
 
 
-async function initMap() {
-  // Create map object
+function createMap() {
+  // Initialize map
   const map = L.map("map").setView([0, 0], 2);
-
-  setTimeout(() => {
-    map.invalidateSize();
-  }, 100);
+  setTimeout(() => map.invalidateSize(), 100);
 
   // Add OpenStreetMap tiles
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -17,36 +16,86 @@ async function initMap() {
     maxZoom: 19,
   }).addTo(map);
 
+  return map;
+}
+
+
+function createIcons() {
+  const propertyIcon = L.icon({
+    iconUrl: "./icons/house.png",
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32],
+  });
+
+  const busStopIcon = L.icon({
+    iconUrl: "./icons/bus.png",
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32],
+  });
+
+  return { PROPERTY: propertyIcon, BUS_STOP: busStopIcon };
+}
+
+
+async function getPropertyPopupContent(propertyId) {
   try {
-    // Fetch GeoJSON features 
-    const response = await fetch(`${API_BASE_URL}/destinations`);
-    if (!response.ok) {
-      throw new Error("Failed to fetch GeoJSON");
+    const detailData = await fetchGeoJSON(`/properties/${propertyId}`);
+    return `
+      <h3>${detailData.name}</h3>
+      <p><strong>Address:</strong> ${detailData.address}</p>
+      <p>${detailData.description}</p>
+    `;
+  } catch (err) {
+    console.error("Error fetching property details:", err);
+    return "<p>Error loading property details</p>";
+  }
+}
+
+
+function getBusStopPopupContent(feature) {
+  return `
+    <h3>Bus Stop</h3>
+    <p>Name: ${feature.properties.name || "Unknown"}</p>
+    <p>Address: ${feature.properties.address || "N/A"}</p>
+  `;
+}
+
+
+function handleFeatureClick(feature, layer) {
+  layer.on("click", async () => {
+    const type = feature.properties.type;
+    let popupContent = "";
+
+    if (type === "PROPERTY") {
+      popupContent = await getPropertyPopupContent(feature.properties.property.id);
+    } else if (type === "BUS_STOP") {
+      popupContent = getBusStopPopupContent(feature);
     }
 
-    const geojson = await response.json();
+    layer.bindPopup(popupContent).openPopup();
+  });
+}
+
+
+async function fetchData(endpoint) {
+  const response = await fetch(`${API_BASE_URL}${endpoint}`);
+  if (!response.ok) throw new Error("Failed to fetch " + endpoint);
+  return response.json();
+}
+
+
+async function initMap() {
+  // Create map object
+  const map = createMap()
+
+  try {
+    // Query GeoJSON features from server
+    const geojson = await fetchData(DESTINATIONS_URL);
 
     // Property icon
-    const propertyIcon = L.icon({
-      iconUrl: "./icons/house.png", // path to house icon
-      iconSize: [32, 32],
-      iconAnchor: [16, 32],
-      popupAnchor: [0, -32],
-    });
-
-    // Bus Stop icon
-    const busStopIcon = L.icon({
-      iconUrl: "./icons/bus.png",
-      iconSize: [32, 32],
-      iconAnchor: [16, 32],
-      popupAnchor: [0, -32],
-    });
-
-    // Maps property type to icon
-    const iconMap = {
-      PROPERTY: propertyIcon,
-      BUS_STOP: busStopIcon,
-    };
+    const iconMap = createIcons();
 
 
     // Add GeoJSON to map
@@ -56,44 +105,7 @@ async function initMap() {
         return L.marker(latlng, { icon });
       },
       // Make overlaid features clickable
-      onEachFeature: (feature, layer) => {
-        layer.on("click", async () => {
-          const type = feature.properties.type;
-
-          // Handle Property features
-          if (type === "PROPERTY") {
-            // Fetch full Property object
-            try {
-              const detailResponse = await fetch(`${API_BASE_URL}/properties/${feature.properties.property.id}`);
-              if (!detailResponse.ok) throw new Error("Failed to fetch details");
-
-              const detailData = await detailResponse.json(); // Wait for response
-
-              // Display property content
-              const popupContent = `
-                <h3>${detailData.name}</h3>
-                <p><strong>Address:</strong> ${detailData.address}</p>
-                <p>${detailData.description}</p>
-              `;
-
-              layer.bindPopup(popupContent).openPopup();
-            } catch (err) {
-              console.error("Error fetching feature details:", err);
-              layer.bindPopup("<p>Error loading property details</p>").openPopup();
-            }
-
-          // Handle bus stop features
-          } else if (type === "BUS_STOP") {
-            // Display bus stop info
-            const busPopupContent = `
-              <h3>Bus Stop</h3>
-              <p>Name: ${feature.properties.name || "Unknown"}</p>
-              <p>Address: ${feature.properties.address || "N/A"}</p>
-            `;
-            layer.bindPopup(busPopupContent).openPopup();
-          }
-        });
-      }
+      onEachFeature: handleFeatureClick
     }).addTo(map);
 
     // Auto-zoom to features 
