@@ -1,3 +1,5 @@
+import { applyMapFilters, resetMapFilters } from "./map/filters.js";
+
 //HALF OF THE BUTTON BEHAVIOR ☠️☠️☠️☠️☠️☠️
 (function() {
   "use strict";
