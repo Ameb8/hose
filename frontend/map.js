@@ -14,7 +14,8 @@ let selectedLayers = [];
 let routeButtonEl = null;
 let currentRouteLayer = null;
 let allFeatures = [];
-let geojsonLayer = null;
+let otherLayer = null;
+let propertyLayer = null;
 
 
 function injectHOSECSS() {
@@ -330,8 +331,8 @@ function applyMapFilters(filters) {
     });
   });
 
-  geojsonLayer.clearLayers();
-  geojsonLayer.addData(filtered);
+  propertyLayer.clearLayers();
+  propertyLayer.addData(filtered);
 }
 
 
@@ -348,22 +349,38 @@ async function initMap() {
     // Property icon
     const iconMap = createIcons();
 
-    // Add GeoJSON to map
-    geojsonLayer = L.geoJSON([], {
+    // Split features by type
+    const propertyFeatures = allFeatures.filter(f => 
+      f.properties.type === "PROPERTY"
+    );
+    const otherFeatures = allFeatures.filter(f => 
+      f.properties.type !== "PROPERTY"
+    );
+
+    // Create property layer with filter
+    propertyLayer = L.geoJSON([], {
       pointToLayer: (feature, latlng) => {
         const icon = iconMap[feature.properties.type];
         return L.marker(latlng, { icon });
       },
-      // Make overlaid features clickable
       onEachFeature: handleFeatureClick
     }).addTo(map);
 
-    geojsonLayer.addData(allFeatures);
+    // Create static-feature layer
+    otherLayer = L.geoJSON(otherFeatures, {
+      pointToLayer: (feature, latlng) => {
+        const icon = iconMap[feature.properties.type];
+        return L.marker(latlng, { icon });
+      },
+      onEachFeature: handleFeatureClick
+    }).addTo(map);
 
-    // Auto-zoom to features 
-    if (geojsonLayer.getLayers().length > 0) {
-      map.fitBounds(geojsonLayer.getBounds());
-    }
+    // Initially show ALL properties
+    propertyLayer.addData(propertyFeatures);
+
+    // Fit bounds using both layers
+    const group = L.featureGroup([propertyLayer, otherLayer]);
+    map.fitBounds(group.getBounds());
 
   } catch (error) {
     console.error("Error loading GeoJSON:", error);
