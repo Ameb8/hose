@@ -48,6 +48,9 @@ dependencies {
     // Rate limiting
     implementation("com.github.vladimir-bukhtoyarov:bucket4j-core:8.0.1")
 
+    // Non-blocking HTTP client
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
+
     // Testing
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
