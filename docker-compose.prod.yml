@@ -14,6 +14,16 @@ services:
     networks:
       - backend
 
+  cloudflared-frontend:
+    image: cloudflare/cloudflared:latest
+    command: tunnel --no-autoupdate --url http://hose-frontend:80
+    restart: unless-stopped
+    depends_on:
+      - hose-frontend
+    networks:
+      - backend
+
+
   osrm:
     image: osrm-backend-arm
     container_name: osrm
