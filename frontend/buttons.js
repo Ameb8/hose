@@ -55,11 +55,30 @@
     setFilterVisible(!filterVisible);
   });
 
-  // apply filter button just gives feedback (demo)
+  document.querySelectorAll(".room-btn").forEach(btn => {
+    btn.addEventListener("click", function() {
+      document.querySelectorAll(".room-btn").forEach(b => b.classList.remove("active"));
+      this.classList.add("active");
+    });
+  });
+
   const applyBtn = document.getElementById('applyFilterBtn');
+
   if (applyBtn) {
     applyBtn.addEventListener('click', function() {
-      alert('✨Demo: Filter applied');
+
+      const minPrice = parseInt(document.getElementById("minPrice").value);
+      const maxPrice = parseInt(document.getElementById("maxPrice").value);
+
+      const activeRoomBtn = document.querySelector(".room-btn.active");
+      const rooms = activeRoomBtn ? parseInt(activeRoomBtn.dataset.rooms) : null;
+
+      applyMapFilters({
+        minPrice,
+        maxPrice,
+        rooms
+      });
+
     });
   }
 

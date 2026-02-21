@@ -13,6 +13,8 @@ let selectedFeatures = [];
 let selectedLayers = [];
 let routeButtonEl = null;
 let currentRouteLayer = null;
+let allFeatures = [];
+let geojsonLayer = null;
 
 
 function injectHOSECSS() {
@@ -303,6 +305,36 @@ function drawRoute(routeData) {
 }
 
 
+function applyMapFilters(filters) {
+  const filtered = allFeatures.filter(feature => {
+
+    if (feature.properties.type !== "PROPERTY") return false;
+
+    const property = feature.properties.property;
+    if (!property) return false;
+
+    const unitTypes = property.unit_types || [];
+
+    return unitTypes.some(unit => {
+
+      const rent = unit.rent / 100; // convert cents to dollars
+
+      const matchesPrice =
+        (!filters.minPrice || rent >= filters.minPrice) &&
+        (!filters.maxPrice || rent <= filters.maxPrice);
+
+      const matchesRooms =
+        (!filters.rooms || unit.bedrooms >= filters.rooms);
+
+      return matchesPrice && matchesRooms;
+    });
+  });
+
+  geojsonLayer.clearLayers();
+  geojsonLayer.addData(filtered);
+}
+
+
 async function initMap() {
   // Create map object
   map = createMap();
@@ -311,13 +343,13 @@ async function initMap() {
   try {
     // Query GeoJSON features from server
     const geojson = await fetchData(DESTINATIONS_URL);
+    allFeatures = geojson.features;
 
     // Property icon
     const iconMap = createIcons();
 
-
     // Add GeoJSON to map
-    const geojsonLayer = L.geoJSON(geojson, {
+    geojsonLayer = L.geoJSON([], {
       pointToLayer: (feature, latlng) => {
         const icon = iconMap[feature.properties.type];
         return L.marker(latlng, { icon });
@@ -325,6 +357,8 @@ async function initMap() {
       // Make overlaid features clickable
       onEachFeature: handleFeatureClick
     }).addTo(map);
+
+    geojsonLayer.addData(allFeatures);
 
     // Auto-zoom to features 
     if (geojsonLayer.getLayers().length > 0) {
