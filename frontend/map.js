@@ -10,6 +10,8 @@ let HOSECardTemplate = null;
 let map;
 let routeMode = false;
 let selectedFeatures = [];
+let selectedLayers = [];
+let routeButtonEl = null;
 let currentRouteLayer = null;
 
 
@@ -151,6 +153,26 @@ function getBusStopPopupContent(feature) {
 }
 
 
+function setRouteMode(enabled) {
+  routeMode = enabled;
+
+  // Update button UI
+  if (routeButtonEl) {
+    routeButtonEl.style.background = enabled ? "#007bff" : "white";
+    routeButtonEl.style.color = enabled ? "white" : "black";
+  }
+
+  // If disabling route mode then cleanup
+  if (!enabled) {
+    selectedFeatures = [];
+
+    // Restore marker opacity
+    selectedLayers.forEach(layer => layer.setOpacity(1));
+    selectedLayers = [];
+  }
+}
+
+
 function handleFeatureClick(feature, layer) {
   layer.on("click", async () => {
     const type = feature.properties.type;
@@ -159,9 +181,8 @@ function handleFeatureClick(feature, layer) {
 
     if (routeMode) {
       selectedFeatures.push(featureId);
-
+      selectedLayers.push(layer);
       layer.setOpacity(0.6);
-
       if (selectedFeatures.length === 2) {
         const [sourceId, destId] = selectedFeatures;
 
@@ -172,8 +193,7 @@ function handleFeatureClick(feature, layer) {
           console.error("Route fetch failed:", err);
         }
 
-        selectedFeatures = [];
-        routeMode = false;
+        setRouteMode(false);
       }
 
       return;
@@ -223,13 +243,10 @@ function addRouteControl() {
 
       L.DomEvent.disableClickPropagation(btn);
 
+      routeButtonEl = btn;
+
       btn.onclick = function () {
-        routeMode = !routeMode;
-
-        btn.style.background = routeMode ? "#007bff" : "white";
-        btn.style.color = routeMode ? "white" : "black";
-
-        selectedFeatures = [];
+        setRouteMode(!routeMode);
 
         if (!routeMode && currentRouteLayer) {
           currentRouteLayer.remove();
