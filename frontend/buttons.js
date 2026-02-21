@@ -43,6 +43,24 @@
     }
   }
 
+  const resetBtn = document.getElementById('resetFiltersBtn');
+
+  if (resetBtn) {
+    resetBtn.addEventListener('click', function() {
+
+      // Clear input fields
+      document.getElementById("minPrice").value = "";
+      document.getElementById("maxPrice").value = "";
+
+      document.querySelectorAll(".room-btn").forEach(b =>
+        b.classList.remove("active")
+      );
+
+      // Reset map layer
+      resetMapFilters();
+    });
+  }
+
   // when user clicks CHAT button - TOGGLE behavior
   chatBtn.addEventListener('click', function(e) {
     e.preventDefault();

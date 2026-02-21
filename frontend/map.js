@@ -336,6 +336,18 @@ function applyMapFilters(filters) {
 }
 
 
+function resetMapFilters() {
+  if (!propertyLayer) return;
+
+  const allPropertyFeatures = allFeatures.filter(f =>
+    f.properties.type === "PROPERTY"
+  );
+
+  propertyLayer.clearLayers();
+  propertyLayer.addData(allPropertyFeatures);
+}
+
+
 async function initMap() {
   // Create map object
   map = createMap();
