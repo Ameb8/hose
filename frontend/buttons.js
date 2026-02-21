@@ -1,3 +1,5 @@
+import { applyMapFilters, resetMapFilters } from "./map/filters.js";
+
 //HALF OF THE BUTTON BEHAVIOR ☠️☠️☠️☠️☠️☠️
 (function() {
   "use strict";
@@ -43,6 +45,24 @@
     }
   }
 
+  const resetBtn = document.getElementById('resetFiltersBtn');
+
+  if (resetBtn) {
+    resetBtn.addEventListener('click', function() {
+
+      // Clear input fields
+      document.getElementById("minPrice").value = "";
+      document.getElementById("maxPrice").value = "";
+
+      document.querySelectorAll(".room-btn").forEach(b =>
+        b.classList.remove("active")
+      );
+
+      // Reset map layer
+      resetMapFilters();
+    });
+  }
+
   // when user clicks CHAT button - TOGGLE behavior
   chatBtn.addEventListener('click', function(e) {
     e.preventDefault();
@@ -55,11 +75,30 @@
     setFilterVisible(!filterVisible);
   });
 
-  // apply filter button just gives feedback (demo)
+  document.querySelectorAll(".room-btn").forEach(btn => {
+    btn.addEventListener("click", function() {
+      document.querySelectorAll(".room-btn").forEach(b => b.classList.remove("active"));
+      this.classList.add("active");
+    });
+  });
+
   const applyBtn = document.getElementById('applyFilterBtn');
+
   if (applyBtn) {
     applyBtn.addEventListener('click', function() {
-      alert('✨Demo: Filter applied');
+
+      const minPrice = parseInt(document.getElementById("minPrice").value);
+      const maxPrice = parseInt(document.getElementById("maxPrice").value);
+
+      const activeRoomBtn = document.querySelector(".room-btn.active");
+      const rooms = activeRoomBtn ? parseInt(activeRoomBtn.dataset.rooms) : null;
+
+      applyMapFilters({
+        minPrice,
+        maxPrice,
+        rooms
+      });
+
     });
   }
 
