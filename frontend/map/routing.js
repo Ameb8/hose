@@ -32,9 +32,15 @@ function updateRouteButtonStyles() {
     const active =
       state.routeMode && state.routeTransport === key;
 
-    btn.style.background = active ? "#007bff" : "white";
-    btn.style.color = active ? "white" : "black";
+    btn.classList.toggle("active", active);
   });
+}
+
+export function clearRoute() {
+  if (state.currentRouteLayer) {
+    state.currentRouteLayer.remove();
+    state.currentRouteLayer = null;
+  }
 }
 
 
@@ -64,8 +70,8 @@ export function addRouteControl() {
             state.routeMode && state.routeTransport === mode.key;
 
           if (isActive) {
+            clearRoute();
             setRouteMode(false);
-            state.routeTransport = null;
           } else {
             state.routeTransport = mode.key;
             setRouteMode(true);
