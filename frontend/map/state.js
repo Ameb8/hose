@@ -4,8 +4,9 @@ export const state = {
   propertyLayer: null,
   otherLayer: null,
   routeMode: false,
+  routeTransport: null, // "walk" | "bike" | "car"
   selectedFeatures: [],
   selectedLayers: [],
   currentRouteLayer: null,
-  routeButtonEl: null
+  routeButtonEls: {}
 };

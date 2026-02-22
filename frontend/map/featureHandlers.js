@@ -19,10 +19,15 @@ function handleFeatureClick(feature, layer) {
             const [sourceId, destId] = state.selectedFeatures;
 
             try {
-            const routeData = await fetchRoute(sourceId, destId);
-            drawRoute(routeData);
+              const routeData = await fetchRoute(
+                sourceId,
+                destId,
+                state.routeTransport
+              );
+              
+              drawRoute(routeData);
             } catch (err) {
-            console.error("Route fetch failed:", err);
+              console.error("Route fetch failed:", err);
             }
 
             setRouteMode(false);

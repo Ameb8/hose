@@ -6,6 +6,6 @@ export async function fetchData(endpoint) {
   return response.json();
 }
 
-export function fetchRoute(sourceId, destId) {
-  return fetchData(`/destinations/${sourceId}/${destId}/route`);
+export function fetchRoute(sourceId, destId, mode) {
+  return fetchData(`/destinations/${sourceId}/${destId}/route?profile=${mode.toUpperCase()}`);
 }

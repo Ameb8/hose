@@ -27,29 +27,54 @@ export function drawRoute(routeData) {
 }
 
 
-export function addRouteControl() {
+function updateRouteButtonStyles() {
+  Object.entries(state.routeButtonEls).forEach(([key, btn]) => {
+    const active =
+      state.routeMode && state.routeTransport === key;
 
+    btn.style.background = active ? "#007bff" : "white";
+    btn.style.color = active ? "white" : "black";
+  });
+}
+
+
+export function addRouteControl() {
   const RouteControl = L.Control.extend({
     options: { position: "bottomleft" },
 
     onAdd: function () {
-      const btn = L.DomUtil.create("button", "route-btn");
-      btn.innerHTML = "🧭 Route";
+      const container = L.DomUtil.create("div", "route-control");
 
-      L.DomEvent.disableClickPropagation(btn);
+      const modes = [
+        { key: "walk", label: "🚶" },
+        { key: "bike", label: "🚴" },
+        { key: "car", label: "🚗" }
+      ];
 
-      state.routeButtonEl = btn;
+      modes.forEach(mode => {
+        const btn = L.DomUtil.create("button", "route-btn", container);
+        btn.innerHTML = mode.label;
 
-      btn.onclick = function () {
-        setRouteMode(!state.routeMode);
+        L.DomEvent.disableClickPropagation(btn);
 
-        if (!state.routeMode && state.currentRouteLayer) {
-          state.currentRouteLayer.remove();
-          state.currentRouteLayer = null;
-        }
-      };
+        state.routeButtonEls[mode.key] = btn;
 
-      return btn;
+        btn.onclick = function () {
+          const isActive =
+            state.routeMode && state.routeTransport === mode.key;
+
+          if (isActive) {
+            setRouteMode(false);
+            state.routeTransport = null;
+          } else {
+            state.routeTransport = mode.key;
+            setRouteMode(true);
+            updateRouteButtonStyles();
+          }
+        };
+      });
+
+      return container;
     }
   });
 
@@ -60,10 +85,11 @@ export function addRouteControl() {
 export function setRouteMode(enabled) {
   state.routeMode = enabled;
 
-  if (state.routeButtonEl) {
-    state.routeButtonEl.style.background = enabled ? "#007bff" : "white";
-    state.routeButtonEl.style.color = enabled ? "white" : "black";
+  if (!enabled) {
+    state.routeTransport = null;
   }
+
+  updateRouteButtonStyles();
 
   if (!enabled) {
     state.selectedFeatures = [];
