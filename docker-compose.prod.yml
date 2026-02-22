@@ -23,11 +23,9 @@ services:
     networks:
       - backend
 
-
-  osrm:
+  osrm-foot:
     image: osrm-backend-arm
-    container_name: osrm
-    command: osrm-routed --algorithm mld /data/ellensburg.osrm
+    command: osrm-routed --algorithm mld /data/foot/ellensburg.osrm
     volumes:
       - ./osrm/data:/data
     ports:
@@ -36,4 +34,25 @@ services:
     networks:
       - backend
 
+  osrm-bike:
+    image: osrm-backend-arm
+    command: osrm-routed --algorithm mld /data/bike/ellensburg.osrm
+    volumes:
+      - ./osrm/data:/data
+    ports:
+      - "5002:5000"
+    restart: unless-stopped
+    networks:
+      - backend
+
+  osrm-car:
+    image: osrm-backend-arm
+    command: osrm-routed --algorithm mld /data/car/ellensburg.osrm
+    volumes:
+      - ./osrm/data:/data
+    ports:
+      - "5003:5000"
+    restart: unless-stopped
+    networks:
+      - backend
   
