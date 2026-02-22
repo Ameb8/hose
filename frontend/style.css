@@ -515,3 +515,53 @@ html, body {
   width: 100%;
   z-index: 20;
 }
+
+
+
+/*
+Routing Buttons
+*/
+
+
+/* Container */
+.route-control {
+  display: flex;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+}
+
+/* Buttons */
+.route-btn {
+  appearance: none;
+  border: none;
+  background: white;
+  padding: 8px 12px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #444;
+}
+
+/* Divider between buttons */
+.route-btn:not(:last-child) {
+  border-right: 1px solid #eaeaea;
+}
+
+/* Hover effect */
+.route-btn:hover {
+  background: #f5f7fa;
+}
+
+/* Active state */
+.route-btn.active {
+  background: #007bff;
+  color: white;
+}
+
+/* Press effect */
+.route-btn:active {
+  transform: scale(0.95);
+}

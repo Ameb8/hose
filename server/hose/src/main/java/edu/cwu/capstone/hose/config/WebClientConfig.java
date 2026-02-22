@@ -11,15 +11,32 @@ import java.time.Duration;
 @Configuration
 public class WebClientConfig {
 
-    @Bean
-    public WebClient routeWebClient() {
-
-        HttpClient httpClient = HttpClient.create()
+    private HttpClient defaultHttpClient() {
+        return HttpClient.create()
                 .responseTimeout(Duration.ofSeconds(5));
+    }
 
+    @Bean
+    public WebClient osrmWalkClient() {
         return WebClient.builder()
-                .baseUrl("http://osrm:5000") // Walk Service
-                .clientConnector(new ReactorClientHttpConnector(httpClient))
+                .baseUrl("http://osrm-foot:5000")
+                .clientConnector(new ReactorClientHttpConnector(defaultHttpClient()))
+                .build();
+    }
+
+    @Bean
+    public WebClient osrmCarClient() {
+        return WebClient.builder()
+                .baseUrl("http://osrm-car:5000")
+                .clientConnector(new ReactorClientHttpConnector(defaultHttpClient()))
+                .build();
+    }
+
+    @Bean
+    public WebClient osrmBikeClient() {
+        return WebClient.builder()
+                .baseUrl("http://osrm-bike:5000")
+                .clientConnector(new ReactorClientHttpConnector(defaultHttpClient()))
                 .build();
     }
 }
