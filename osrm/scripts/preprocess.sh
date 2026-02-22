@@ -38,11 +38,11 @@ echo "Preprocessing profile: $PROFILE_NAME"
 echo "Using Lua profile: $LUA_PROFILE"
 echo "Output directory: $OUTPUT_DIR"
 
-docker run --rm \
-  -v "$DATA_DIR":/data \
-  osrm-backend-arm sh -c "\
-    osrm-extract -p $LUA_PROFILE /data/ellensburg.osm.pbf --output /data/$PROFILE_NAME/ellensburg.osrm && \
-    osrm-partition /data/$PROFILE_NAME/ellensburg.osrm && \
-    osrm-customize /data/$PROFILE_NAME/ellensburg.osrm"
+docker run --rm -v "$DATA_DIR":/data osrm-backend-arm sh -c "\
+  cd /data/$PROFILE_NAME && \
+  osrm-extract -p $LUA_PROFILE ellensburg.osm.pbf && \
+  osrm-partition ellensburg.osrm && \
+  osrm-customize ellensburg.osrm \
+"
 
 echo "Done: Files created in $OUTPUT_DIR"
