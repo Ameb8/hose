@@ -27,8 +27,9 @@ public class DestinationController {
     @GetMapping("/{fromId}/{toId}/route")
     public RouteResponseDTO getRouteBetween(
             @PathVariable Long fromId,
-            @PathVariable Long toId
+            @PathVariable Long toId,
+            @RequestParam(defaultValue = "WALK") RoutingProfile profile
     ) {
-        return service.getRouteBetween(fromId, toId);
+        return service.getRouteBetween(fromId, toId, profile);
     }
 }
