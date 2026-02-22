@@ -19,7 +19,7 @@ public class WebClientConfig {
     @Bean
     public WebClient osrmWalkClient() {
         return WebClient.builder()
-                .baseUrl("http://osrm-walk:5000")
+                .baseUrl("http://osrm-foot:5000")
                 .clientConnector(new ReactorClientHttpConnector(defaultHttpClient()))
                 .build();
     }
