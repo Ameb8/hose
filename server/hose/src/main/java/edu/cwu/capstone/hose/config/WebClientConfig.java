@@ -18,7 +18,7 @@ public class WebClientConfig {
                 .responseTimeout(Duration.ofSeconds(5));
 
         return WebClient.builder()
-                .baseUrl("http://osrm:5000") // Walk Service
+                .baseUrl("http://osrm-foot:5000") // Walk Service
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .build();
     }
