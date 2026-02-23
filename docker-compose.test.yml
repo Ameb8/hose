@@ -1,0 +1,31 @@
+services:
+
+  hose-api:
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/hose_test_db
+      SPRING_DATASOURCE_USERNAME: test_user
+      SPRING_DATASOURCE_PASSWORD: test_password
+    restart: "no"
+    depends_on:
+      - flyway
+
+  postgres:
+    environment:
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_password
+      POSTGRES_DB: hose_test_db
+    volumes: []
+    tmpfs:
+      - /var/lib/postgresql/data
+    restart: "no"
+
+  flyway:
+    environment:
+      FLYWAY_URL: jdbc:postgresql://postgres:5432/hose_test_db
+      FLYWAY_USER: test_user
+      FLYWAY_PASSWORD: test_password
+      FLYWAY_LOCATIONS: filesystem:/flyway/sql,filesystem:/flyway/sql-test
+    volumes:
+      - ./database/migrations:/flyway/sql
+      - ./database/migrations-test:/flyway/sql-test
+
