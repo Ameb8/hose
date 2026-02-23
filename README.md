@@ -20,7 +20,7 @@ This endpoint returns all map features in GeoJSON format. It is called once on i
 
 This endpoint is used to query detailed informtion about any property object. The path parameter can be switched to any property objects' ID. If the primry key does not reference  valid Property object, the request will fail. The frontend uses this endpoint to display HOSE cards and enable detailed property comparisons.
 
-[Routing Data Between 2 Destinations](https://bestsellers-navigate-bone-this.trycloudflare.com/destinations/1/10/route?profile=WALK)
+[Routing Data Between 2 Destinations](https://bestsellers-navigate-bone-this.trycloudflare.com/destinations/1/10/route?profile=WALK) (GET)
 
 This endpoint returns routing data for travelling between two destination objects. The response includes travel time and distance, as well as travel path in GeoJSON format. The two path parameters are the primary keys of the source and destination objects. The query parameter allows for selection of different travel modes, defaulting to `WALK` if not provided. Valid values are "WALK", "BIKE", or "CAR". 
 
