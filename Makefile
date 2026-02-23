@@ -38,6 +38,16 @@ logs-dev:
 logs-prod:
 	$(COMPOSE) $(BASE_FILE) $(PROD_FILE) logs -f
 
+# Safely rebuild and restart only the webpage in prod
+deploy-frontend:
+	$(COMPOSE) $(BASE_FILE) $(PROD_FILE) build hose-frontend
+	$(COMPOSE) $(BASE_FILE) $(PROD_FILE) up -d --no-deps hose-frontend
+
+# Safely rebuild and restart only the Rest-API in prod
+deploy-api:
+	$(COMPOSE) $(BASE_FILE) $(PROD_FILE) build hose-api
+	$(COMPOSE) $(BASE_FILE) $(PROD_FILE) up -d --no-deps hose-api
+
 osrm:
 	$(COMPOSE) $(BASE_FILE) $(DEV_FILE) up -d osrm
 
