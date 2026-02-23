@@ -3,8 +3,10 @@ COMPOSE=docker compose
 BASE_FILE=-f docker-compose.yml
 DEV_FILE=-f docker-compose.dev.yml
 PROD_FILE=-f docker-compose.prod.yml
+TEST_FILE=-f docker-compose.test.yml
+TEST_PROJECT=-p hose_test
 
-.PHONY: dev dev-build prod build down logs logs-dev logs-prod deploy-frontend deploy-api restart osrm
+.PHONY: dev dev-build prod build down logs logs-dev logs-prod deploy-frontend deploy-api restart osrm test test-down test-logs
 
 # Run in development config
 dev:
@@ -54,3 +56,15 @@ osrm:
 # Restart services
 restart:
 	$(COMPOSE) $(BASE_FILE) restart
+
+# Run integration tests safely (isolated project)
+test:
+	$(COMPOSE) $(TEST_PROJECT) $(BASE_FILE) $(TEST_FILE) up --build --abort-on-container-exit
+
+# Clean up test environment completely
+test-down:
+	$(COMPOSE) $(TEST_PROJECT) down -v
+
+# View test logs
+test-logs:
+	$(COMPOSE) $(TEST_PROJECT) $(BASE_FILE) $(TEST_FILE) logs -f
