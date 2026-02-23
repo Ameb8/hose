@@ -1,5 +1,6 @@
 package edu.cwu.capstone.hose.destinations.dto;
 
+import edu.cwu.capstone.hose.destinations.RoutingProfile;
 import lombok.*;
 
 
@@ -11,4 +12,6 @@ public class RouteRequestDTO {
     private Double fromLon;
     private Double toLat;
     private Double toLon;
+
+    RoutingProfile profile;
 }

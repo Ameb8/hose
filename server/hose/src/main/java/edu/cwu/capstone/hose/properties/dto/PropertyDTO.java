@@ -21,6 +21,7 @@ public class PropertyDTO {
     private String description;
     private String contactPhone;
     private String contactEmail;
+    private String address;
     private List<UnitTypeDTO> unitTypes;
     private List<WalkDistanceDTO> busStopWalkDistances;
     private List<PropertyImageDTO> images;
