@@ -1,18 +1,28 @@
 # HOSE
 
+[HOSE Webpage](https://explicit-streaming-merit-guru.trycloudflare.com)
+
 ## For Development
 
 ### Using Public Server
 
-The server is now hosted, and available at [this base url.](https://kit-loved-brown-water.trycloudflare.com). The frontend can query GeoJSON feaature list at the /destinations endpoint and detailed property data at the /properties/{PK} endpoint. In order to avoid malicous bot behavior, rate-limitng allows only 5 requests per minute from a client for all endoints. This can be adjusted if it is causing anyone issues. Additionl endpoints exist for write operations, intended only for admins to populate the database in a consistent aand standardized manner.
+The server is now hosted, and available at [this base url](https://bestsellers-navigate-bone-this.trycloudflare.com). The frontend can query GeoJSON feature list at the `/destinations` endpoint, detailed property data at the `/properties/{PROPERTY_PK}` endpoint, and routing calculations at the `/destinations/{SOURCE_PK}/{DEST_PK}/route?profile={TRANSPORTATION_METHOD}`. In order to avoid malicous bot behavior, rate-limitng allows only 5 requests per minute from a client for all endoints. This can be adjusted if it is causing anyone issues. Additionl endpoints exist for write operations, intended only for admins to populate the database in a consistent and standardized manner.
+
+The URL may change periodically until a more permenant hosting solution is found. This document will be updated upon url change. Additionally, the server will periodically go down. In this scenario, running locally will allow testing of API interactions (see below).
 
 #### Endpoints Needed by Frontend:
 
-[GeoJSON Features](https://kit-loved-brown-water.trycloudflare.com/destinations) (GET)
+[GeoJSON Features](https://bestsellers-navigate-bone-this.trycloudflare.com/destinations) (GET)
 
-[Detailed Property Info (change trailing int to any property's ID)](https://kit-loved-brown-water.trycloudflare.com/properties/1) (GET)
+This endpoint returns all map features in GeoJSON format. It is called once on initial map load.
 
-The URL may change periodically until a more permenant hosting solution is found. This document will be updated upon url change. Additionally, the server will periodically go down. In this scenario, running locally will allow testing of API interactions (see below).
+[Detailed Property Info (change trailing int to any property's ID)](https://bestsellers-navigate-bone-this.trycloudflare.com/properties/1) (GET)
+
+This endpoint is used to query detailed informtion about any property object. The path parameter can be switched to any property objects' ID. If the primry key does not reference  valid Property object, the request will fail. The frontend uses this endpoint to display HOSE cards and enable detailed property comparisons.
+
+[Routing Data Between 2 Destinations](https://bestsellers-navigate-bone-this.trycloudflare.com/destinations/1/10/route?profile=WALK)
+
+This endpoint returns routing data for travelling between two destination objects. The response includes travel time and distance, as well as travel path in GeoJSON format. The two path parameters are the primary keys of the source and destination objects. The query parameter allows for selection of different travel modes, defaulting to `WALK` if not provided. Valid values are "WALK", "BIKE", or "CAR". 
 
 ### Running Locally
 
