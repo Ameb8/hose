@@ -15,6 +15,8 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
     @Query("""
         SELECT DISTINCT p
         FROM Property p
+        LEFT JOIN FETCH p.destination dest
+        LEFT JOIN FETCH dest.address
         LEFT JOIN FETCH p.unitTypes
         LEFT JOIN FETCH p.walkDistances wd
         LEFT JOIN FETCH wd.destination d

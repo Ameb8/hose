@@ -38,11 +38,23 @@ public interface PropertyMapper {
             )
         """
     )
+    @Mapping(
+        target = "address",
+        expression = """
+            java(
+                property.getDestination() != null &&
+                property.getDestination().getAddress() != null
+                    ? property.getDestination().getAddress().toString()
+                    : null
+            )
+        """
+    )
     @Mapping(target = "propertyType",
              expression = "java(property.getPropertyType().name())")
     @Mapping(target = "images", source = "images")
     PropertyDTO toDTO(Property property);
 
+    
     // Summary (GET all)
     @Mapping(target = "propertyType",
              expression = "java(property.getPropertyType().name())")

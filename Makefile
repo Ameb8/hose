@@ -4,7 +4,7 @@ BASE_FILE=-f docker-compose.yml
 DEV_FILE=-f docker-compose.dev.yml
 PROD_FILE=-f docker-compose.prod.yml
 
-.PHONY: dev dev-build prod build down logs logs-dev logs-build restart osrm
+.PHONY: dev dev-build prod build down logs logs-dev logs-prod deploy-frontend deploy-api restart osrm
 
 # Run in development config
 dev:
@@ -37,6 +37,16 @@ logs-dev:
 # View production logs
 logs-prod:
 	$(COMPOSE) $(BASE_FILE) $(PROD_FILE) logs -f
+
+# Safely rebuild and restart only the webpage in prod
+deploy-frontend:
+	$(COMPOSE) $(BASE_FILE) $(PROD_FILE) build hose-frontend
+	$(COMPOSE) $(BASE_FILE) $(PROD_FILE) up -d --no-deps hose-frontend
+
+# Safely rebuild and restart only the Rest-API in prod
+deploy-api:
+	$(COMPOSE) $(BASE_FILE) $(PROD_FILE) build hose-api
+	$(COMPOSE) $(BASE_FILE) $(PROD_FILE) up -d --no-deps hose-api
 
 osrm:
 	$(COMPOSE) $(BASE_FILE) $(DEV_FILE) up -d osrm
