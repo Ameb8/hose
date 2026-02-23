@@ -59,7 +59,8 @@ restart:
 
 # Run integration tests safely (isolated project)
 test:
-	$(COMPOSE) $(TEST_PROJECT) $(BASE_FILE) $(TEST_FILE) up --build --abort-on-container-exit
+	$(COMPOSE) $(TEST_PROJECT) $(BASE_FILE) $(TEST_FILE) up --build pytest
+	$(COMPOSE) $(TEST_PROJECT) down -v
 
 # Clean up test environment completely
 test-down:
