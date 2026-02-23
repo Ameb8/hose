@@ -29,3 +29,22 @@ services:
       - ./database/migrations:/flyway/sql
       - ./database/migrations-test:/flyway/sql-test
 
+  pytest:
+    image: python:3.12-slim
+    depends_on:
+      - hose-api
+    working_dir: /app
+    volumes:
+      - ./tests:/app/tests
+      - ./tests/requirements.txt:/app/tests/requirements.txt
+    command: >
+      /bin/bash -c "
+      pip install -r /app/tests/requirements.txt &&
+      python -m pytest --maxfail=1 --disable-warnings --tb=short
+      "
+    networks:
+      - backend
+    restart: "no"
+
+  hose-frontend:
+    profiles: ["do-not-run"]
