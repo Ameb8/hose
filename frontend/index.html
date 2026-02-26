@@ -24,49 +24,70 @@
   <div id="map"></div>
   <!-- HEADER -->
   <div class="ellensburg-card">
-  <div class="top-row">
-    <!-- LEFT: Chat and Filter  -->
-    <div class="header-actions">
-      <!-- left side: chat button and chat open indicator (dynamic) -->
-      <div class="chat-section">
-        <button id="chatButton" class="chat-button">
-          <i class="fas fa-comment-dots"></i> Chat
-        </button>
+    <div class="header-scale">
+      <div class="top-row">
+        <!-- LEFT: Chat and Filter  -->
+        <div class="header-actions">
 
-        <!--when chat is open, -->
-        <div id="chatOpenBadge" class="chat-status hidden">
-          <i class="fas fa-circle"></i> AI assistance 
+          <!-- left side: chat button and chat open indicator (dynamic) -->
+          <div class="chat-section">
+            <button id="chatButton" class="ui-button chat-button">
+              <i class="fas fa-comment-dots"></i> Chat
+            </button>
+
+            <!--when chat is open, -->
+            <div id="chatOpenBadge" class="chat-status hidden">
+              <i class="fas fa-circle"></i> AI assistance 
+            </div>
+            
+            <div id="chatWindow" class="chat-window hidden">
+              <div class="chat-messages"></div>
+              <div class="chat-input-area">
+                <input type="text" id="chatInput" placeholder="Type your message...">
+                <button id="sendChatBtn"><i class="fas fa-paper-plane"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- filter toggle button (opens/closes filter panel) -->
+          <button id="filterToggleBtn" class="ui-button filter-toggle-btn">
+            <i class="fas fa-sliders-h"></i> Filter
+            <i class="fas fa-chevron-down" style="font-size: 0.85rem; opacity: 0.9;"></i>
+          </button>
+
+
+          <!-- Compare button-->
+          <button id="compareBtn" class="ui-button compare-button">
+            <i class="fas fa-code-compare"></i> Compare Now
+          </button>
+
+        </div>
+
+        <!-- RIGHT: App name -->
+        <div class="house-header">
+          <div class="house-title">
+            <span class="big-house">HO</span>
+            <span class="house-sub">using for </span>
+            <span class="big-house">S</span>
+            <span class="house-sub">tudents in </span>
+            <span class="big-house">E</span>
+            <span class="house-sub">llensburg 🏠</span>
+          </div>
         </div>
       </div>
-
-      <!-- filter toggle button (opens/closes filter panel) -->
-      <button id="filterToggleBtn" class="filter-toggle-btn">
-        <i class="fas fa-sliders-h"></i> Filter
-        <i class="fas fa-chevron-down" style="font-size: 0.85rem; opacity: 0.9;"></i>
-      </button>
-      </div>
-
-      <!-- RIGHT: App name -->
-    <div class="house-header">
-      <div class="house-title">
-        <span class="big-house">HO</span>
-        <span class="house-sub">using for </span>
-        <span class="big-house">S</span>
-        <span class="house-sub">tudents in </span>
-        <span class="big-house">E</span>
-        <span class="house-sub">llensburg 🏠</span>
-      </div>
     </div>
+  </div>
 
     <!-- FILTER PANEL (hidden by default, toggle with button) -->
-    <div id="filterPanel" class="filter-panel">
-      <div class="filter-content">
-         <!-- Price Range Slider -->
-    <div class="filter-section">
-      <div class="filter-header">
-        <i class="fas fa-dollar-sign"></i>
-        <h3>Price Range</h3>
-      </div>
+  <div id="filterPanel" class="filter-panel">
+    <div class="filter-content">
+      <!-- Price Range Slider -->
+      <div class="filter-section">
+        <div class="filter-header">
+          <i class="fas fa-dollar-sign"></i>
+          <h3>Price Range</h3>
+        </div>
       <div class="price-range-container">
         <div class="price-inputs">
           <div class="price-field">
@@ -78,7 +99,6 @@
             <input type="number" id="maxPrice" value="1800" min="0" max="3000" step="50">
           </div>
         </div>
-
       </div>
     </div>
 
@@ -166,10 +186,10 @@
       <button id="applyFilterBtn" class="filter-apply-btn">
         <i class="fas fa-check"></i> Apply Filters
       </button>
-    </div>
-       
-      </div>
-    </div>
+    </div>       
+  </div>
+</div>
+  
   <script type="module" src="buttons.js"></script>
 </body>
 </html>
