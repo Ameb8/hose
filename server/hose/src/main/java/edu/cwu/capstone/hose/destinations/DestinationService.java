@@ -10,6 +10,8 @@ import edu.cwu.capstone.hose.destinations.dto.RouteResponseDTO;
 import edu.cwu.capstone.hose.properties.PropertyRepository;
 import edu.cwu.capstone.hose.properties.PropertyMapper;
 import edu.cwu.capstone.hose.properties.dto.PropertySummaryDTO;
+import edu.cwu.capstone.hose.routing.RoutingProfile;
+import edu.cwu.capstone.hose.routing.RoutingService;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -24,23 +26,16 @@ public class DestinationService {
 
     private final DestinationRepository destinationRepository;
     private final DestinationMapper destinationMapper;
-    private final WebClient walkClient;
-    private final WebClient carClient;
-    private final WebClient bikeClient;
+    private final RoutingService routingService;
 
-    public DestinationService(
-                DestinationRepository destinationRepository,
-                DestinationMapper destinationMapper,
-                @Qualifier("osrmWalkClient") WebClient walkClient,
-                @Qualifier("osrmCarClient") WebClient carClient,
-                @Qualifier("osrmBikeClient") WebClient bikeClient) {
-        
+    public DestinationService(DestinationRepository destinationRepository,
+                              DestinationMapper destinationMapper,
+                              RoutingService routingService) {
         this.destinationRepository = destinationRepository;
         this.destinationMapper = destinationMapper;
-        this.walkClient = walkClient;
-        this.carClient = carClient;
-        this.bikeClient = bikeClient;
+        this.routingService = routingService;
     }
+
 
     public Map<String, Object> getGeoJson() {
         List<DestinationDTO> destinations = destinationMapper.toDTOs(
@@ -51,54 +46,21 @@ public class DestinationService {
     }
 
     public RouteResponseDTO getRouteBetween(Long fromId, Long toId, RoutingProfile profile) {
-
         Destination from = destinationRepository.findById(fromId)
                 .orElseThrow(() -> new RuntimeException("From destination not found"));
 
         Destination to = destinationRepository.findById(toId)
                 .orElseThrow(() -> new RuntimeException("To destination not found"));
 
-        String coordinates = String.format(
-                "%f,%f;%f,%f",
-                from.getLongitude(), from.getLatitude(),
-                to.getLongitude(), to.getLatitude()
+        // Delegate routing to RoutingService
+        return routingService.getRoute(
+                from.getLatitude(),
+                from.getLongitude(),
+                to.getLatitude(),
+                to.getLongitude(),
+                profile
         );
-
-        WebClient client = getClientForProfile(profile);
-        
-        OsrmRouteResponse osrmResponse = client.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/route/v1/{profile}/{coords}")
-                        .queryParam("overview", "full")
-                        .queryParam("geometries", "geojson")
-                        .build(profile.getOsrmProfile(), coordinates))
-                .retrieve()
-                .bodyToMono(OsrmRouteResponse.class)
-                .retry(2)
-                .block();
-        if (osrmResponse == null ||
-                osrmResponse.getRoutes() == null ||
-                osrmResponse.getRoutes().isEmpty()) {
-            throw new RuntimeException("No route returned from OSRM");
-        }
-
-        OsrmRouteResponse.Route route = osrmResponse.getRoutes().get(0);
-
-        RouteResponseDTO response = new RouteResponseDTO();
-        response.setDistance(route.getDistance());
-        response.setDuration(route.getDuration());
-        response.setGeometry(route.getGeometry());
-
-        return response;
     }
-
-    private WebClient getClientForProfile(RoutingProfile profile) {
-    return switch (profile) {
-        case CAR -> carClient;
-        case BIKE -> bikeClient;
-        case WALK -> walkClient;
-    };
-}
 }
 
 

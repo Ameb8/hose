@@ -1,4 +1,4 @@
-package edu.cwu.capstone.hose.destinations;
+package edu.cwu.capstone.hose.routing;
 
 public enum RoutingProfile {
 
