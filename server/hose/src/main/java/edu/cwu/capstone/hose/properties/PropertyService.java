@@ -2,6 +2,7 @@ package edu.cwu.capstone.hose.properties;
 
 import edu.cwu.capstone.hose.addresses.Address;
 import edu.cwu.capstone.hose.destinations.Destination;
+import edu.cwu.capstone.hose.destinations.DestinationRepository;
 import edu.cwu.capstone.hose.properties.PropertyType;
 import edu.cwu.capstone.hose.properties.PropertyMapper;
 import edu.cwu.capstone.hose.destinations.DestinationType;
@@ -10,11 +11,14 @@ import edu.cwu.capstone.hose.properties.PropertyRepository;
 import edu.cwu.capstone.hose.properties.dto.CreatePropertyRequest;
 import edu.cwu.capstone.hose.properties.dto.PropertyDTO;
 import edu.cwu.capstone.hose.unit_types.UnitType;
+import edu.cwu.capstone.hose.routing.RoutingService;
+import edu.cwu.capstone.hose.routing.dto.DistanceDTO;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,10 +29,14 @@ public class PropertyService {
 
     private final PropertyRepository propertyRepository;
     private final PropertyMapper propertyMapper;
+    private final DestinationRepository destinationRepository;
+    private final RoutingService routingService;
 
-    public PropertyService(PropertyRepository repository, PropertyMapper mapper) {
+    public PropertyService(PropertyRepository repository, PropertyMapper mapper, DestinationRepository destinationRepository, RoutingService routingService) {
         this.propertyRepository = repository;
         this.propertyMapper = mapper;
+        this.destinationRepository = destinationRepository;
+        this.routingService = routingService;
     }
 
     public List<Property> getAllProperties() {
@@ -105,5 +113,41 @@ public class PropertyService {
 
     public void deleteProperty(Long id) {
         propertyRepository.deleteById(id);
+    }
+
+    public Boolean nearestBusStop(Long id) {
+        Optional<Property> optProperty = propertyRepository.findById(id);
+
+        if(optProperty.isEmpty())
+            return false;
+
+        Property property = optProperty.get();
+
+        List<Destination> stops = destinationRepository.findByType(DestinationType.BUS_STOP);
+
+        double minDistance = Double.MAX_VALUE;
+        double minTime = Double.MAX_VALUE;
+
+        Destination dest = property.getDestination();
+        double sourceLat = dest.getLatitude();
+        double sourceLong = dest.getLongitude();
+
+        for(Destination stop : stops) {
+            DistanceDTO distance = routingService.getWalkRating(sourceLat, sourceLong, stop.getLatitude(), stop.getLongitude());
+
+            if(distance.getDistance() < minDistance) {
+                minDistance = distance.getDistance();
+                minTime = distance.getDistance();
+            }
+        }
+
+        BigDecimal miles = BigDecimal
+            .valueOf(minDistance)
+            .divide(BigDecimal.valueOf(1609.344), 2, RoundingMode.HALF_UP);
+
+        property.setBusStopMins((int) Math.round(minTime / 60.0));
+        property.setBusStopDistance(miles);
+
+        return true;
     }
 }

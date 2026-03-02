@@ -1,7 +1,11 @@
 package edu.cwu.capstone.hose.routing;
 
+import edu.cwu.capstone.hose.destinations.DestinationRepository;
 import edu.cwu.capstone.hose.destinations.dto.OsrmRouteResponse;
 import edu.cwu.capstone.hose.destinations.dto.RouteResponseDTO;
+import edu.cwu.capstone.hose.properties.Property;
+import edu.cwu.capstone.hose.routing.dto.DistanceDTO;
+
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -57,6 +61,29 @@ public class RoutingService {
         response.setGeometry(route.getGeometry());
 
         return response;
+    }
+
+    public DistanceDTO getWalkRating(
+            double fromLat,
+            double fromLon,
+            double toLat,
+            double toLon
+    ) {
+        // Make routing calculation
+        RouteResponseDTO response = getRoute(
+            fromLat,
+            fromLon,
+            toLat,
+            toLon,
+            RoutingProfile.WALK
+        );
+
+        // Create DistanceDTO
+        DistanceDTO dist = new DistanceDTO();
+        dist.setDistance(response.getDistance());
+        dist.setDuration(response.getDuration());
+
+        return dist;
     }
 
     private WebClient getClientForProfile(RoutingProfile profile) {

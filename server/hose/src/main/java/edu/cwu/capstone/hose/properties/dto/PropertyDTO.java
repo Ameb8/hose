@@ -4,9 +4,10 @@ package edu.cwu.capstone.hose.properties.dto;
 import edu.cwu.capstone.hose.property_images.dto.PropertyImageDTO;
 import edu.cwu.capstone.hose.unit_types.dto.UnitTypeDTO;
 import edu.cwu.capstone.hose.walk_distances.dto.WalkDistanceDTO;
-
+import jakarta.persistence.Column;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -25,4 +26,7 @@ public class PropertyDTO {
     private List<UnitTypeDTO> unitTypes;
     private List<WalkDistanceDTO> busStopWalkDistances;
     private List<PropertyImageDTO> images;
+    private BigDecimal busStopDistance;
+    private Integer busStopMins;
+
 }
