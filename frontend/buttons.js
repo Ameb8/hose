@@ -127,15 +127,27 @@ function setChatOpen(open) {
   if (applyBtn) {
     applyBtn.addEventListener('click', function() {
 
+      // Price filters
       const minPrice = parseInt(document.getElementById("minPrice").value);
       const maxPrice = parseInt(document.getElementById("maxPrice").value);
 
+      // Walk distance filters
+      const minDistCWU = parseInt(document.getElementById("walkingMin").value) || null;
+      const maxDistCWU = parseInt(document.getElementById("walkingMax").value) || null;
+      const minDistBus = parseInt(document.getElementById("transitMin").value) || null;
+      const maxDistBus = parseInt(document.getElementById("transitMax").value) || null;
+
+      // Number of rooms filters
       const activeRoomBtn = document.querySelector(".room-btn.active");
       const rooms = activeRoomBtn ? parseInt(activeRoomBtn.dataset.rooms) : null;
 
       applyMapFilters({
         minPrice,
         maxPrice,
+        minDistCWU,
+        maxDistCWU,
+        minDistBus,
+        maxDistBus,
         rooms
       });
 
