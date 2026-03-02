@@ -9,3 +9,4 @@ export async function fetchData(endpoint) {
 export function fetchRoute(sourceId, destId, mode) {
   return fetchData(`/destinations/${sourceId}/${destId}/route?profile=${mode.toUpperCase()}`);
 }
+
