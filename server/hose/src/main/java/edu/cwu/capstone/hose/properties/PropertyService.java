@@ -155,7 +155,7 @@ public class PropertyService {
 
     @Transactional
     public Boolean nearestPOIProperty(Property property, DestinationType type) {
-        List<Destination> stops = destinationRepository.findByType(DestinationType.BUS_STOP);
+        List<Destination> stops = destinationRepository.findByType(type);
 
         double minDistance = Double.MAX_VALUE;
         double minTime = Double.MAX_VALUE;
@@ -184,6 +184,8 @@ public class PropertyService {
             property.setCwuMins((int) Math.round(minTime / 60.0));
             property.setCwuDistance(miles);
         }
+
+        propertyRepository.save(property);
 
         return true;
     }
