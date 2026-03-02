@@ -49,6 +49,13 @@ public class GeoJsonMapper {
         return feature;
     }
 
+    /*
+    private BigDecimal busStopDistance;
+    private Integer busStopMins;
+    private BigDecimal cwuDistance;
+    private Integer cwuMins;
+    */
+
     /** Converts a PropertySummaryDTO into a JSON-friendly map */
     private static Map<String, Object> toProperty(PropertySummaryDTO property) {
         Map<String, Object> propMap = new HashMap<>();
@@ -58,6 +65,10 @@ public class GeoJsonMapper {
         propMap.put("description", property.getDescription());
         propMap.put("contact_phone", property.getContactPhone());
         propMap.put("contact_email", property.getContactEmail());
+        propMap.put("bus_stop_distance", property.getBusStopDistance());
+        propMap.put("bus_stop_time", property.getBusStopMins());
+        propMap.put("cwu_distance", property.getCwuDistance());
+        propMap.put("cwu_time", property.getCwuMins());
 
         if (property.getUnitTypes() != null) {
             List<Map<String, Object>> unitTypes = property.getUnitTypes().stream()
