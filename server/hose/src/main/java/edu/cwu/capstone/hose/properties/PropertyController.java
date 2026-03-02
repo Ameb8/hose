@@ -64,7 +64,6 @@ public class PropertyController {
 
     @PatchMapping("/stops")
     public ResponseEntity<Void> updateNearestAll(
-            @PathVariable Long id,
             @RequestHeader(value = "X-API-Key", required = false) String key
     ) {
         if (!isValidKey(key)) {
