@@ -115,8 +115,34 @@ public class PropertyService {
         propertyRepository.deleteById(id);
     }
 
-    @Transactional
+
+    public Boolean calcNearestAll() {
+        List<Property> properties = propertyRepository.findAll();
+        Boolean success = true;
+
+
+        for(Property property : properties) {
+            if(!nearestPOIProperty(property, DestinationType.CWU))
+                success = false;
+            if(!nearestPOIProperty(property, DestinationType.BUS_STOP))
+                success = false;
+        }
+
+        return success;
+    }
+
+
+    public Boolean nearestCWU(Long id) {
+        return nearestPOI(id, DestinationType.CWU);
+    }
+
+
     public Boolean nearestBusStop(Long id) {
+        return nearestPOI(id, DestinationType.BUS_STOP);
+    }
+
+
+    public Boolean nearestPOI(Long id, DestinationType type) {
         Optional<Property> optProperty = propertyRepository.findById(id);
 
         if(optProperty.isEmpty())
@@ -124,6 +150,11 @@ public class PropertyService {
 
         Property property = optProperty.get();
 
+        return nearestPOIProperty(property, type);
+    }
+
+    @Transactional
+    public Boolean nearestPOIProperty(Property property, DestinationType type) {
         List<Destination> stops = destinationRepository.findByType(DestinationType.BUS_STOP);
 
         double minDistance = Double.MAX_VALUE;
