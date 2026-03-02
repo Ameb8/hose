@@ -25,4 +25,6 @@ public class PropertySummaryDTO {
     private List<UnitTypeDTO> unitTypes;
     private BigDecimal busStopDistance;
     private Integer busStopMins;
+    private BigDecimal cwuDistance;
+    private Integer cwuMins;
 }

@@ -84,4 +84,10 @@ public class Property {
 
     @Column(name = "bus_stop_mins")
     private Integer busStopMins;
+
+    @Column(name = "cwu_distance", precision = 4, scale = 2)
+    private BigDecimal cwuDistance;
+
+    @Column(name = "cwu_mins")
+    private Integer cwuMins;
 }

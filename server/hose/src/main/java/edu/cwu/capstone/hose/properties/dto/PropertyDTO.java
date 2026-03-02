@@ -28,5 +28,7 @@ public class PropertyDTO {
     private List<PropertyImageDTO> images;
     private BigDecimal busStopDistance;
     private Integer busStopMins;
+    private BigDecimal cwuDistance;
+    private Integer cwuMins;
 
 }

@@ -177,8 +177,13 @@ public class PropertyService {
             .valueOf(minDistance)
             .divide(BigDecimal.valueOf(1609.344), 2, RoundingMode.HALF_UP);
 
-        property.setBusStopMins((int) Math.round(minTime / 60.0));
-        property.setBusStopDistance(miles);
+        if(type == DestinationType.BUS_STOP) {
+            property.setBusStopMins((int) Math.round(minTime / 60.0));
+            property.setBusStopDistance(miles);
+        } else if (type == DestinationType.CWU) {
+            property.setCwuMins((int) Math.round(minTime / 60.0));
+            property.setCwuDistance(miles);
+        }
 
         return true;
     }
