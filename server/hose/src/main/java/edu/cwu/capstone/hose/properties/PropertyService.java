@@ -115,6 +115,7 @@ public class PropertyService {
         propertyRepository.deleteById(id);
     }
 
+    @Transactional
     public Boolean nearestBusStop(Long id) {
         Optional<Property> optProperty = propertyRepository.findById(id);
 
@@ -137,7 +138,7 @@ public class PropertyService {
 
             if(distance.getDistance() < minDistance) {
                 minDistance = distance.getDistance();
-                minTime = distance.getDistance();
+                minTime = distance.getDuration();
             }
         }
 
