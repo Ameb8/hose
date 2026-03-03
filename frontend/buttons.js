@@ -1,5 +1,8 @@
 import { applyMapFilters, resetMapFilters } from "./map/filters.js";
 
+const API_BASE_URL = "https://driving-solaris-stewart-visiting.trycloudflare.com";
+
+
 //HALF OF THE BUTTON BEHAVIOR ☠️☠️☠️☠️☠️☠️
 (function() {
   "use strict";
@@ -14,16 +17,58 @@ import { applyMapFilters, resetMapFilters } from "./map/filters.js";
   const sendChatBtn = document.getElementById("sendChatBtn");
   const chatMessages = document.querySelector(".chat-messages");
 
-function sendMessage() {
+async function sendMessage() {
   const text = chatInput.value.trim();
   if (!text) return;
 
-  const msg = document.createElement("div");
-  msg.textContent = text;
-  msg.classList.add("user-message"); //add AI somewhere around here
+  // Add user message to UI
+  const userMsg = document.createElement("div");
+  userMsg.textContent = text;
+  userMsg.classList.add("user-message");
+  chatMessages.appendChild(userMsg);
 
-  chatMessages.appendChild(msg);
   chatInput.value = "";
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+
+  // Create temporary AI "thinking..." message
+  const aiMsg = document.createElement("div");
+  aiMsg.textContent = "AI is typing...";
+  aiMsg.classList.add("ai-message");
+  chatMessages.appendChild(aiMsg);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+
+  try { // Make API call with LLM Prompt
+    const response = await fetch(`${API_BASE_URL}/api/ai`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        query: text
+      })
+    });
+
+    // Handle 503 if LLM service is down
+    if (response.status === 503) {
+      aiMsg.textContent = "AI assistant is currently unavailable.";
+      return;
+    }
+
+    // Handle other errors
+    if (!response.ok) { 
+      throw new Error("Request failed");
+    }
+
+    const data = await response.json();
+
+    // Extract LLM response
+    aiMsg.textContent = data.answer;
+
+  } catch (error) {
+    console.error("Chat error:", error);
+    aiMsg.textContent = "AI assistant is currently unavailable.";
+  }
+
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
