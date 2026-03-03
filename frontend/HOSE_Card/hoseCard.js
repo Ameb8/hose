@@ -60,9 +60,8 @@ export function showHOSECard(data) {
 
   const spans = card.querySelectorAll(".apt-panel-header span");
   if (spans.length >= 2) {
-    spans[0].textContent = `Distance: ${data.distance || "N/A"}`;
-    spans[1].textContent = data.address || "Unknown";
-    spans[2].textContent = formatPhone(data.contactPhone);
+    spans[0].textContent = data.address || "Unknown";
+    spans[1].textContent = formatPhone(data.contactPhone);
   }
 
   const box = card.querySelector(".apt-panel-box");
@@ -75,6 +74,16 @@ export function showHOSECard(data) {
           .join("")
       : "<p>No description available.</p>";
 
+    const unitList = data.unitTypes?.length
+      ? data.unitTypes.map(unit => `
+          <div class="unit-row">
+            <span class="unit-price">$${(unit.rentCents/100).toLocaleString()}</span>
+            <span>${unit.bedrooms} Bed</span>
+            <span>${unit.bathrooms} Bath</span>
+          </div>
+        `).join("")
+      : `<div class="unit-row">No units available</div>`;
+
     box.innerHTML = `
       <div class="hose-section">
         <p><strong>Walking Distance To:</strong></p>
@@ -83,8 +92,12 @@ export function showHOSECard(data) {
       </div>
 
       <div class="hose-section">
-        <p><strong>Price:</strong> ${data.price || "N/A"}</p>
-        <p><strong>Room Type:</strong> ${data.roomType || "N/A"}</p>
+        <div class="unit-dropdown">
+          <button class="unit-toggle">Available Units ▾</button>
+          <div class="unit-dropdown-content">
+            ${unitList}
+          </div>
+        </div>
       </div>
 
       <div class="hose-description">
@@ -92,6 +105,17 @@ export function showHOSECard(data) {
         ${formattedDescription}
       </div>
     `;
+
+    // Dropdown toggle logic
+    const toggle = box.querySelector(".unit-toggle");
+    const content = box.querySelector(".unit-dropdown-content");
+
+    toggle.addEventListener("click", () => {
+      content.classList.toggle("open");
+      toggle.textContent = content.classList.contains("open")
+        ? "Available Units ▴"
+        : "Available Units ▾";
+    });
   }
 
   container.querySelector(".apt-card-overlay")

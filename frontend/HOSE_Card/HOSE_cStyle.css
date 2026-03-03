@@ -120,3 +120,61 @@
 .hose-description p {
   margin: 0 0 8px 0;
 }
+
+
+
+
+/* Dropdown wrapper */
+.unit-dropdown {
+  margin-top: 10px;
+}
+
+/* Toggle button */
+.unit-toggle {
+  width: 100%;
+  background: #1e2a40;
+  color: #D5BB93;
+  border: none;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.unit-toggle:hover {
+  background: #162133;
+}
+
+/* Hidden content */
+.unit-dropdown-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  background: #2f3f5f;
+  border-radius: 6px;
+  margin-top: 6px;
+  padding: 0 10px;
+}
+
+.unit-dropdown-content.open {
+  max-height: 300px;
+  padding: 10px;
+}
+
+/* Individual unit row */
+.unit-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  font-size: 0.9rem;
+}
+
+.unit-row:last-child {
+  border-bottom: none;
+}
+
+.unit-price {
+  font-weight: 600;
+}
