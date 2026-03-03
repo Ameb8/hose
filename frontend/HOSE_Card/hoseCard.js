@@ -10,6 +10,18 @@ function injectHOSECSS() {
   }
 }
 
+function formatPhone(phone) {
+  if (!phone) return "N/A";
+
+  const cleaned = phone.replace(/\D/g, "");
+
+  if (cleaned.length === 10) {
+    return `(${cleaned.slice(0,3)}) ${cleaned.slice(3,6)}-${cleaned.slice(6)}`;
+  }
+
+  return phone;
+}
+
 injectHOSECSS();
 
 export async function loadHOSECardTemplate() {
@@ -50,18 +62,35 @@ export function showHOSECard(data) {
   if (spans.length >= 2) {
     spans[0].textContent = `Distance: ${data.distance || "N/A"}`;
     spans[1].textContent = data.address || "Unknown";
+    spans[2].textContent = formatPhone(data.contactPhone);
   }
 
   const box = card.querySelector(".apt-panel-box");
+  console.log("Data:\n\n", data) // DEBUG ******
   if (box) {
+    const formattedDescription = data.description
+      ? data.description
+          .split("\n")
+          .map(p => `<p>${p.trim()}</p>`)
+          .join("")
+      : "<p>No description available.</p>";
+
     box.innerHTML = `
-      <p><strong>Public transit Route:</strong> ${data.transitRoute || "N/A"}</p>
-      <p class="sub-info"><strong>Nearest stop:</strong> ${data.nearestStop || "N/A"}</p>
-      <p class="sub-info"><strong>CWU stop:</strong> ${data.cwuStop || "N/A"}</p>
-      <p><strong>Lease type:</strong> ${data.leaseType || "N/A"}</p>
-      <p><strong>Price:</strong> ${data.price || "N/A"}</p>
-      <p><strong>Room type:</strong> ${data.roomType || "N/A"}</p>
-      <p><strong>Pet policy:</strong> ${data.petPolicy || "N/A"}</p>
+      <div class="hose-section">
+        <p><strong>Walking Distance To:</strong></p>
+        <p class="sub-info"><strong>Nearest Bus Stop:</strong> ${data.busStopDistance ?? "N/A"} mi</p>
+        <p class="sub-info"><strong>CWU:</strong> ${data.cwuDistance ?? "N/A"} mi</p>
+      </div>
+
+      <div class="hose-section">
+        <p><strong>Price:</strong> ${data.price || "N/A"}</p>
+        <p><strong>Room Type:</strong> ${data.roomType || "N/A"}</p>
+      </div>
+
+      <div class="hose-description">
+        <h3>About This Property</h3>
+        ${formattedDescription}
+      </div>
     `;
   }
 

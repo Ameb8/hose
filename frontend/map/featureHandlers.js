@@ -43,7 +43,9 @@ function handleFeatureClick(feature, layer) {
 
       // Fetch HOSE card template
       await loadHOSECardTemplate();
+      showHOSECard(detailData);
 
+      /*
       // Show HOSE card modal
       showHOSECard({
         images: detailData.images || [],
@@ -58,6 +60,7 @@ function handleFeatureClick(feature, layer) {
         roomType: detailData.unitTypes?.[0]?.name || "N/A",
         petPolicy: "N/A",
       });
+      */
     } else if (type === "BUS_STOP") { // Handle bus stops
       popupContent = getBusStopPopupContent(feature);
       layer.bindPopup(popupContent).openPopup();
