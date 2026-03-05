@@ -1,6 +1,6 @@
 import { applyMapFilters, resetMapFilters } from "./map/filters.js";
 
-const API_BASE_URL = "https://driving-solaris-stewart-visiting.trycloudflare.com";
+const LLM_URL = "https://random-text-here.trycloudflare.com"
 
 
 //HALF OF THE BUTTON BEHAVIOR ☠️☠️☠️☠️☠️☠️
@@ -38,7 +38,7 @@ async function sendMessage() {
   chatMessages.scrollTop = chatMessages.scrollHeight;
 
   try { // Make API call with LLM Prompt
-    const response = await fetch(`${API_BASE_URL}/api/ai`, {
+    const response = await fetch(`${LLM_BASE_URL}/ask-ai`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
