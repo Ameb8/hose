@@ -1,6 +1,6 @@
 import { applyMapFilters, resetMapFilters } from "./map/filters.js";
 
-const LLM_URL = "https://random-text-here.trycloudflare.com"
+const LLM_BASE_URL = "https://random-text-here.trycloudflare.com";
 
 
 //HALF OF THE BUTTON BEHAVIOR ☠️☠️☠️☠️☠️☠️
