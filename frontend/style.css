@@ -162,7 +162,8 @@ body {
     position: absolute;
     top: 110%;
     left: 0;
-    width: 260px;
+    width: 420px;
+    height: 500px;
     background: #ffffff;
     border-radius: 14px;
     padding: 12px;
@@ -174,7 +175,7 @@ body {
 }
 
 .chat-messages {
-    max-height: 200px;
+    flex: 1;
     overflow-y: auto;
     padding-right: 4px;
     font-size: 0.9rem;
