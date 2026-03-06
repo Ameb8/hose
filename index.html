@@ -7,6 +7,7 @@
     <meta name="referrer" content="no-referrer">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="compare/compare.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Leaflet CSS -->
@@ -116,49 +117,15 @@
       </div>
     </div>
 
-    <!-- Pet Policy - Yes/No Toggle -->
-    <div class="filter-section">
-      <div class="filter-header">
-        <i class="fas fa-paw"></i>
-        <h3>Pet Policy</h3>
-      </div>
-      <div class="pet-toggle">
-        <button id="petYesBtn" class="pet-btn ">Yes: ✔️</button>
-        <button id="petNoBtn" class="pet-btn">No: ✖️</button>
-      </div>
-    </div>
-
-    <!-- Lease Type -->
-    <div class="filter-section">
-      <div class="filter-header">
-        <i class="fas fa-file-signature"></i>
-        <h3>Lease Type</h3>
-      </div>
-      <div class="lease-options">
-        <label class="lease-option">
-          <input type="radio" name="lease" value="month-to-month" checked>
-          <span>Month-to-Month</span>
-        </label>
-        <label class="lease-option">
-          <input type="radio" name="lease" value="yearly">
-          <span>Yearly</span>
-        </label>
-        <label class="lease-option">
-          <input type="radio" name="lease" value="both">
-          <span>Both</span>  <!-- I forgot the other lease type, will add on saturday -->
-        </label>
-      </div>
-    </div>
-
     <!-- Distance from CWU -->
     <div class="filter-section">
       <div class="filter-header">
         <i class="fas fa-location-dot"></i>
-        <h3>Distance from CWU</h3>
+        <h3>Walking Distance To</h3>
       </div>
       <div class="distance-inputs">
         <div class="distance-field">
-          <label>Walking</label>
+          <label>CWU</label>
           <div class="time-input">
             <input type="number" id="walkingMin" value="5" min="0" max="60"> 
             <span> - </span>
@@ -167,7 +134,7 @@
           </div>
         </div>
         <div class="distance-field">
-          <label>Transit</label>
+          <label>Nearest Bus Stop</label>
           <div class="time-input">
             <input type="number" id="transitMin" value="10" min="0" max="60">
             <span> - </span>
