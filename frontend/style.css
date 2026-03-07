@@ -529,6 +529,7 @@ body {
 /* Routing Buttons */
 .route-control {
     display: flex;
+    flex-direction: column;
     background: white;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -545,6 +546,18 @@ body {
     cursor: pointer;
     transition: all 0.2s ease;
     color: #444;
+}
+
+.route-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.route-button-row {
+  display: flex;
+  gap: 8px;
 }
 
 .route-btn:not(:last-child) {

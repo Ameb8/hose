@@ -59,16 +59,23 @@ export function addRouteControl() {
 
     onAdd: function () {
       const container = L.DomUtil.create("div", "route-control");
+      const title = L.DomUtil.create("div", "route-title", container);
+      const buttons = L.DomUtil.create("div", "route-button-row", container);
+      title.textContent = "Get Directions";
 
       const modes = [
-        { key: "walk", label: "🚶" },
-        { key: "bike", label: "🚴" },
-        { key: "car", label: "🚗" }
+        { key: "walk", icon: "🚶", label: "Walk" },
+        { key: "bike", icon: "🚴", label: "Bike" },
+        { key: "car", icon: "🚗", label: "Drive" }
       ];
 
       modes.forEach(mode => {
-        const btn = L.DomUtil.create("button", "route-btn", container);
-        btn.innerHTML = mode.label;
+        const btn = L.DomUtil.create("button", "route-btn", buttons);
+
+        btn.innerHTML = `
+          <span class="route-icon">${mode.icon}</span>
+          <span class="route-label">${mode.label}</span>
+        `;
 
         L.DomEvent.disableClickPropagation(btn);
 
