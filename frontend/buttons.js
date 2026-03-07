@@ -1,4 +1,5 @@
 import { applyMapFilters, resetMapFilters } from "./map/filters.js";
+import { showCompareView } from './compare/compare.js';
 
 const LLM_BASE_URL = "https://random-text-here.trycloudflare.com";
 
@@ -6,6 +7,17 @@ const LLM_BASE_URL = "https://random-text-here.trycloudflare.com";
 //HALF OF THE BUTTON BEHAVIOR ☠️☠️☠️☠️☠️☠️
 (function() {
   "use strict";
+
+      // Compare button
+  const compareBtn = document.getElementById('compareBtn');
+  if (compareBtn) {
+      compareBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          console.log("Compare button clicked");
+          showCompareView();
+      });
+  }
+  
 
   // DOM elements
   const chatBtn = document.getElementById('chatButton');
