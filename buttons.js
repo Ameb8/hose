@@ -1,5 +1,6 @@
 import { showCompareView } from './compare/compare.js';
 
+
 // Import other stuff you need
 import { applyMapFilters, resetMapFilters } from "./map/filters.js";
 
@@ -35,6 +36,25 @@ document.addEventListener('DOMContentLoaded', function() {
     
     let chatOpen = false;
     let filterVisible = false;
+
+    //close Panels:
+    function closeAllPanels() {
+        // Close Chat
+        if (chatOpen) {
+            chatOpen = false;
+            chatWindow.classList.add('hidden');
+            if (chatBadge) chatBadge.classList.add('hidden');
+        }
+
+        // Close Filter
+        if (filterVisible) {
+            filterVisible = false;
+            filterPanel.classList.remove('show');
+            filterBtn.innerHTML =
+                '<i class="fas fa-sliders-h"></i> Filter <i class="fas fa-chevron-down"></i>';
+        }
+    }
+
     
     // Chat functions
     if (chatBtn && chatWindow) {
@@ -52,6 +72,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    //compare
+    compareBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    closeAllPanels();
+    showCompareView();});
+
     
     // Filter functions
     function setFilterVisible(visible) {
