@@ -13,5 +13,17 @@ export function createIcons() {
     popupAnchor: [0, -32],
   });
 
-  return { PROPERTY: propertyIcon, BUS_STOP: busStopIcon };
+    const cwuIcon = L.icon({
+    iconUrl: "./icons/cwu.png",
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32],
+  });
+
+
+  return {
+    PROPERTY: propertyIcon,
+    BUS_STOP: busStopIcon,
+    CWU: cwuIcon
+  };
 }

@@ -11,7 +11,8 @@ export function createLayers() {
   );
 
   const otherFeatures = state.allFeatures.filter(f =>
-    f.properties.type === "BUS_STOP"
+    f.properties.type === "BUS_STOP" ||
+    f.properties.type === "CWU"
   );
 
   state.propertyLayer = L.geoJSON([], {
