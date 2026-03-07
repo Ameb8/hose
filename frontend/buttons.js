@@ -13,7 +13,7 @@ const LLM_BASE_URL = "https://random-text-here.trycloudflare.com";
   if (compareBtn) {
       compareBtn.addEventListener('click', function(e) {
           e.preventDefault();
-          console.log("Compare button clicked");
+          closeAllPanels();
           showCompareView();
       });
   }
@@ -97,6 +97,25 @@ chatInput.addEventListener("keypress", (e) => {
   // By default, chat is NOT open, filter panel is hidden
   let chatOpen = false;
   let filterVisible = false;
+
+
+//close Panels:
+function closeAllPanels() {
+  // Close Chat
+  if (chatOpen) {
+    chatOpen = false;
+    chatWindow.classList.add('hidden');
+    if (chatBadge) chatBadge.classList.add('hidden');
+  }
+
+  // Close Filter
+  if (filterVisible) {
+    filterVisible = false;
+    filterPanel.classList.remove('show');
+    filterBtn.innerHTML =
+        '<i class="fas fa-sliders-h"></i> Filter <i class="fas fa-chevron-down"></i>';
+  }
+}
 
   // Function to update chat UI based on state
 function setChatOpen(open) {
