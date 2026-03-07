@@ -553,11 +553,13 @@ body {
   font-weight: 600;
   margin-bottom: 6px;
   text-align: center;
+  color: #333;
 }
 
 .route-button-row {
   display: flex;
-  gap: 8px;
+  gap: 6px;
+  justify-content: center;
 }
 
 .route-btn:not(:last-child) {
