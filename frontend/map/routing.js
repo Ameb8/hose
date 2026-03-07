@@ -13,6 +13,8 @@ export function drawRoute(routeData) {
     coord[0]
   ]);
 
+  const miles = routeData.distance / 1609.34;
+
   state.currentRouteLayer = L.polyline(latlngs, {
     color: "blue",
     weight: 5
@@ -21,9 +23,16 @@ export function drawRoute(routeData) {
   state.map.fitBounds(state.currentRouteLayer.getBounds());
 
   state.currentRouteLayer.bindPopup(`
-    <strong>Distance:</strong> ${(routeData.distance / 1000).toFixed(2)} km<br>
+    <strong>Distance:</strong> ${miles.toFixed(2)} miles<br>
     <strong>Duration:</strong> ${(routeData.duration / 60).toFixed(1)} minutes
   `).openPopup();
+
+  state.currentRouteLayer.on("popupclose", () => {
+    if (state.currentRouteLayer) {
+      state.currentRouteLayer.remove();
+      state.currentRouteLayer = null;
+    }
+  });
 }
 
 
