@@ -62,13 +62,21 @@ function getBusStopPopupContent(feature) {
   `;
 }
 
+
 function getCWUPopupContent(feature) {
+  const description = feature.properties.description || "No description available";
+
   return `
-    <h3>CWU Location</h3>
-    <p>Name: ${feature.properties.name || "Unknown"}</p>
-    <p>Address: ${feature.properties.address || "N/A"}</p>
-    
+    <div style="max-width: 300px; max-height: 200px; overflow-y: auto;">
+      <h3>CWU Location</h3>
+      <p><strong>Name:</strong> ${feature.properties.name || "Unknown"}</p>
+      <p><strong>Address:</strong> ${feature.properties.address || "N/A"}</p>
+      <div style="margin-top: 8px;">
+        ${description.split("\n").map(paragraph => `<p>${paragraph}</p>`).join('')}
+      </div>
+    </div>
   `;
 }
+
 
 export { handleFeatureClick };
