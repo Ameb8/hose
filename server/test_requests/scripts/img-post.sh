@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 
 # Get parameters from command line
@@ -20,7 +20,7 @@ export $(grep -v '^#' "$SCRIPT_DIR/../../../.env" | xargs)
 
 
 # Make the PropertyImage POST request
-curl -v -X POST "https://precisely-cave-inexpensive-cardiovascular.trycloudflare.com/properties/$PROPERTY_ID/images" \
+curl -v -X POST "$SERVER_URL/properties/$PROPERTY_ID/images" \
   -H "Accept: application/json" \
   -F "file=@$IMAGE_PATH" \
   -H "x-api-key: $ADMIN_KEY" \
