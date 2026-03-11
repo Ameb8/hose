@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://driving-solaris-stewart-visiting.trycloudflare.com";
+const API_BASE_URL = "http://192.168.1.211:8080";
 
 export async function fetchData(endpoint) {
   const response = await fetch(`${API_BASE_URL}${endpoint}`);
