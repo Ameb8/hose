@@ -1,10 +1,13 @@
 services:
+  # Auto-restart Rest-API container
   hose-api:
     restart: unless-stopped
 
+  # Auto-restart DB container
   postgres:
     restart: unless-stopped
 
+  # Expose Rest-API through cloudflared tunnel
   cloudflared:
     image: cloudflare/cloudflared:latest
     command: tunnel --no-autoupdate --url http://hose-api:8080
@@ -14,6 +17,7 @@ services:
     networks:
       - backend
 
+  # Expose frontend server through cloudflared tunnel
   cloudflared-frontend:
     image: cloudflare/cloudflared:latest
     command: tunnel --no-autoupdate --url http://hose-frontend:80
@@ -23,36 +27,13 @@ services:
     networks:
       - backend
 
+  # Run OSRM ARM image
   osrm-foot:
     image: osrm-backend-arm
-    command: osrm-routed --algorithm mld /data/foot/ellensburg.osrm
-    volumes:
-      - ./osrm/data:/data
-    ports:
-      - "5001:5000"
     restart: unless-stopped
-    networks:
-      - backend
-
   osrm-bike:
     image: osrm-backend-arm
-    command: osrm-routed --algorithm mld /data/bike/ellensburg.osrm
-    volumes:
-      - ./osrm/data:/data
-    ports:
-      - "5002:5000"
     restart: unless-stopped
-    networks:
-      - backend
-
   osrm-car:
     image: osrm-backend-arm
-    command: osrm-routed --algorithm mld /data/car/ellensburg.osrm
-    volumes:
-      - ./osrm/data:/data
-    ports:
-      - "5003:5000"
     restart: unless-stopped
-    networks:
-      - backend
-  

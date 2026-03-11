@@ -1,5 +1,6 @@
 
 services:
+  # Frontend webpage container
   hose-frontend:
     build:
       context: ./frontend
@@ -8,6 +9,7 @@ services:
     depends_on:
       - hose-api
 
+  # Springboot Rest-API container
   hose-api:
     build:
       context: ./server/hose
@@ -54,6 +56,62 @@ services:
     networks:
       - backend
 
+  # Seed DB data first run
+  seed-data:
+    image: postgres:15
+    depends_on:
+      flyway:
+        condition: service_completed_successfully
+    environment:
+      PGPASSWORD: ${DB_PASSWORD}
+    command: |
+      sh -c "
+        COUNT=$$(psql -h postgres -U $${DB_USER} -d $${DB_NAME} -t -c 'SELECT COUNT(*) FROM addresses;')
+        if [ $$COUNT -eq 0 ]; then
+          echo 'Database empty, seeding...'
+          psql -h postgres -U $${DB_USER} -d $${DB_NAME} -f /seeds/seed-data.sql
+        else
+          echo 'Database already seeded, skipping...'
+        fi
+      "
+    volumes:
+      - ./database/seeds:/seeds
+    networks:
+      - backend
+  
+  # OSRM container to route foot traffic
+  osrm-foot:
+    image: osrm/osrm-backend
+    command: osrm-routed --algorithm mld /data/foot/ellensburg.osrm
+    volumes:
+      - ./osrm/data:/data
+    ports:
+      - "5001:5000"
+    networks:
+      - backend
+
+  # OSRM container to route cycling traffic
+  osrm-bike:
+    image: osrm/osrm-backend
+    command: osrm-routed --algorithm mld /data/bike/ellensburg.osrm
+    volumes:
+      - ./osrm/data:/data
+    ports:
+      - "5002:5000"
+    networks:
+      - backend
+
+  # OSRM container to route vehicle traffic
+  osrm-car:
+    image: osrm/osrm-backend
+    command: osrm-routed --algorithm mld /data/car/ellensburg.osrm
+    volumes:
+      - ./osrm/data:/data
+    ports:
+      - "5003:5000"
+    networks:
+      - backend
+  
 
 networks:
   backend:
