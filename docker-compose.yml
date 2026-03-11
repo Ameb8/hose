@@ -66,12 +66,11 @@ services:
       PGPASSWORD: ${DB_PASSWORD}
     command: |
       sh -c "
-        COUNT=$$(psql -h postgres -U $${DB_USER} -d $${DB_NAME} -t -c 'SELECT COUNT(*) FROM addresses;')
-        if [ $$COUNT -eq 0 ]; then
-          echo 'Database empty, seeding...'
-          psql -h postgres -U $${DB_USER} -d $${DB_NAME} -f /seeds/seed-data.sql
+        if [ ! -f /var/lib/postgresql/data/PG_VERSION ]; then
+          echo 'Database volume empty, seeding...'
+          psql -h postgres -U \$DB_USER -d \$DB_NAME -f /seeds/seed-data.sql
         else
-          echo 'Database already seeded, skipping...'
+          echo 'Database volume has data, skipping seed...'
         fi
       "
     volumes:
