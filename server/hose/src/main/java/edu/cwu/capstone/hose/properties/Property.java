@@ -9,6 +9,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -78,5 +79,15 @@ public class Property {
     @Builder.Default
     private Set<PropertyImage> images = new HashSet<>();
 
+    @Column(name = "bus_stop_distance", precision = 4, scale = 2)
+    private BigDecimal busStopDistance;
 
+    @Column(name = "bus_stop_mins")
+    private Integer busStopMins;
+
+    @Column(name = "cwu_distance", precision = 4, scale = 2)
+    private BigDecimal cwuDistance;
+
+    @Column(name = "cwu_mins")
+    private Integer cwuMins;
 }

@@ -4,6 +4,8 @@ import edu.cwu.capstone.hose.destinations.dto.DestinationDTO;
 import edu.cwu.capstone.hose.destinations.GeoJsonMapper;
 
 import edu.cwu.capstone.hose.destinations.dto.RouteResponseDTO;
+import edu.cwu.capstone.hose.routing.RoutingProfile;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

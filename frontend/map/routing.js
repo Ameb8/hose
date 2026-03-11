@@ -13,6 +13,8 @@ export function drawRoute(routeData) {
     coord[0]
   ]);
 
+  const miles = routeData.distance / 1609.34;
+
   state.currentRouteLayer = L.polyline(latlngs, {
     color: "blue",
     weight: 5
@@ -21,9 +23,16 @@ export function drawRoute(routeData) {
   state.map.fitBounds(state.currentRouteLayer.getBounds());
 
   state.currentRouteLayer.bindPopup(`
-    <strong>Distance:</strong> ${(routeData.distance / 1000).toFixed(2)} km<br>
+    <strong>Distance:</strong> ${miles.toFixed(2)} miles<br>
     <strong>Duration:</strong> ${(routeData.duration / 60).toFixed(1)} minutes
   `).openPopup();
+
+  state.currentRouteLayer.on("popupclose", () => {
+    if (state.currentRouteLayer) {
+      state.currentRouteLayer.remove();
+      state.currentRouteLayer = null;
+    }
+  });
 }
 
 
@@ -50,16 +59,23 @@ export function addRouteControl() {
 
     onAdd: function () {
       const container = L.DomUtil.create("div", "route-control");
+      const title = L.DomUtil.create("div", "route-title", container);
+      const buttons = L.DomUtil.create("div", "route-button-row", container);
+      title.textContent = "Get Directions";
 
       const modes = [
-        { key: "walk", label: "🚶" },
-        { key: "bike", label: "🚴" },
-        { key: "car", label: "🚗" }
+        { key: "walk", icon: "🚶", label: "Walk" },
+        { key: "bike", icon: "🚴", label: "Bike" },
+        { key: "car", icon: "🚗", label: "Drive" }
       ];
 
       modes.forEach(mode => {
-        const btn = L.DomUtil.create("button", "route-btn", container);
-        btn.innerHTML = mode.label;
+        const btn = L.DomUtil.create("button", "route-btn", buttons);
+
+        btn.innerHTML = `
+          <span class="route-icon">${mode.icon}</span>
+          <span class="route-label">${mode.label}</span>
+        `;
 
         L.DomEvent.disableClickPropagation(btn);
 

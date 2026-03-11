@@ -16,4 +16,6 @@ public interface DestinationRepository extends JpaRepository<Destination, Long> 
            LEFT JOIN FETCH d.property
            """)
     List<Destination> findAllWithAddressAndProperty();
+
+    List<Destination> findByType(DestinationType type);
 }

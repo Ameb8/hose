@@ -11,12 +11,14 @@ export function createLayers() {
   );
 
   const otherFeatures = state.allFeatures.filter(f =>
-    f.properties.type !== "PROPERTY"
+    f.properties.type === "BUS_STOP" ||
+    f.properties.type === "CWU"
   );
 
   state.propertyLayer = L.geoJSON([], {
     pointToLayer: (feature, latlng) => {
       const icon = iconMap[feature.properties.type];
+      if (!icon) return null;
       return L.marker(latlng, { icon });
     },
     onEachFeature: handleFeatureClick

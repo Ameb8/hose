@@ -1,6 +1,6 @@
 package edu.cwu.capstone.hose.destinations.dto;
 
-import edu.cwu.capstone.hose.destinations.RoutingProfile;
+import edu.cwu.capstone.hose.routing.RoutingProfile;
 import lombok.*;
 
 

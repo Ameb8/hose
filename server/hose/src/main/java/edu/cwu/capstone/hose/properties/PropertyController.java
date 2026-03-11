@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -58,6 +59,42 @@ public class PropertyController {
         // Attempt to create Property object
         Property property = service.createProperty(request);
         return ResponseEntity.ok(mapper.toDTO(property));
+    }
+
+
+    @PatchMapping("/stops")
+    public ResponseEntity<Void> updateNearestAll(
+            @RequestHeader(value = "X-API-Key", required = false) String key
+    ) {
+        if (!isValidKey(key)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        boolean success = service.calcNearestAll();
+
+        if (success) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PatchMapping("/stops/{id}")
+    public ResponseEntity<Void> updateNearest(
+            @PathVariable Long id,
+            @RequestHeader(value = "X-API-Key", required = false) String key
+    ) {
+        if (!isValidKey(key)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        boolean success = service.nearestBusStop(id);
+
+        if (success) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     private boolean isValidKey(String key) {

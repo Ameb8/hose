@@ -1,0 +1,118 @@
+/* compare/compare.css */
+.compare-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.compare-container {
+    background: #1e2a40;
+    width: 90%;
+    max-width: 1400px;
+    max-height: 90vh;
+    border-radius: 12px;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.compare-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #eee;
+}
+
+.compare-header h2 {
+    margin: 0;
+    color:#8c623b;
+}
+
+.close-compare {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+}
+
+.close-compare:hover {
+    color: #25344F;
+}
+
+.compare-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.compare-card {
+    border: 1px solid #E8DDDD;
+    border-radius: 8px;
+    overflow: hidden;
+    background:#440200;
+}
+
+.compare-card-image {
+    height: 200px;
+    overflow: hidden;
+}
+
+.compare-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.compare-card-content {
+    padding: 15px;
+}
+
+.compare-card-content h3 {
+    margin: 0 0 10px 0;
+    color:#D5BB93;
+}
+
+.compare-card-content p {
+    margin: 5px 0;
+    color:#D5BB93;
+    font-size: 14px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.compare-card-content .price {
+    font-size: 18px;
+    font-weight: bold;
+    color: #EBD6BE;
+}
+
+.compare-remove {
+    margin-top: 15px;
+    padding: 8px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.compare-remove:hover {
+    background: #c0392b;
+}
+
+.empty-compare {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-size: 16px;
+}

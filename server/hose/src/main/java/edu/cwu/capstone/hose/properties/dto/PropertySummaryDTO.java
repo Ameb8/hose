@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -22,4 +23,8 @@ public class PropertySummaryDTO {
     private String contactPhone;
     private String contactEmail;
     private List<UnitTypeDTO> unitTypes;
+    private BigDecimal busStopDistance;
+    private Integer busStopMins;
+    private BigDecimal cwuDistance;
+    private Integer cwuMins;
 }

@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://bestsellers-navigate-bone-this.trycloudflare.com";
+const API_BASE_URL = "https://driving-solaris-stewart-visiting.trycloudflare.com";
 
 export async function fetchData(endpoint) {
   const response = await fetch(`${API_BASE_URL}${endpoint}`);
@@ -9,3 +9,4 @@ export async function fetchData(endpoint) {
 export function fetchRoute(sourceId, destId, mode) {
   return fetchData(`/destinations/${sourceId}/${destId}/route?profile=${mode.toUpperCase()}`);
 }
+

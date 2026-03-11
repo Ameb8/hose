@@ -13,7 +13,7 @@ public class WebClientConfig {
 
     private HttpClient defaultHttpClient() {
         return HttpClient.create()
-                .responseTimeout(Duration.ofSeconds(5));
+                .responseTimeout(Duration.ofSeconds(25));
     }
 
     @Bean
@@ -36,6 +36,14 @@ public class WebClientConfig {
     public WebClient osrmBikeClient() {
         return WebClient.builder()
                 .baseUrl("http://osrm-bike:5000")
+                .clientConnector(new ReactorClientHttpConnector(defaultHttpClient()))
+                .build();
+    }
+
+    @Bean
+    public WebClient aiClient() {
+        return WebClient.builder()
+                .baseUrl("http://100.74.11.124:3001")
                 .clientConnector(new ReactorClientHttpConnector(defaultHttpClient()))
                 .build();
     }

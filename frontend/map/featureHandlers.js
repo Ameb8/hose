@@ -43,23 +43,12 @@ function handleFeatureClick(feature, layer) {
 
       // Fetch HOSE card template
       await loadHOSECardTemplate();
-
-      // Show HOSE card modal
-      showHOSECard({
-        images: detailData.images || [],
-        name: detailData.name,
-        distance: "N/A",
-        address: detailData.address || "Unknown",
-        transitRoute: "N/A", 
-        nearestStop: detailData.busStopWalkDistances?.[0]?.stopName || "N/A",
-        cwuStop: detailData.busStopWalkDistances?.find(s => s.type === "CWU")?.stopName || "N/A",
-        leaseType: detailData.propertyType || "N/A",
-        price: detailData.unitTypes?.[0] ? `$${(detailData.unitTypes[0].rentCents/100).toLocaleString()}` : "N/A",
-        roomType: detailData.unitTypes?.[0]?.name || "N/A",
-        petPolicy: "N/A",
-      });
+      showHOSECard(detailData);
     } else if (type === "BUS_STOP") { // Handle bus stops
       popupContent = getBusStopPopupContent(feature);
+      layer.bindPopup(popupContent).openPopup();
+    } else if (type === "CWU") {
+      popupContent = getCWUPopupContent(feature);
       layer.bindPopup(popupContent).openPopup();
     }
   });
@@ -72,5 +61,22 @@ function getBusStopPopupContent(feature) {
     <p>Address: ${feature.properties.address || "N/A"}</p>
   `;
 }
+
+
+function getCWUPopupContent(feature) {
+  const description = feature.properties.description || "No description available";
+
+  return `
+    <div style="max-width: 300px; max-height: 200px; overflow-y: auto;">
+      <h3>CWU Location</h3>
+      <p><strong>Name:</strong> ${feature.properties.name || "Unknown"}</p>
+      <p><strong>Address:</strong> ${feature.properties.address || "N/A"}</p>
+      <div style="margin-top: 8px;">
+        ${description.split("\n").map(paragraph => `<p>${paragraph}</p>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
 
 export { handleFeatureClick };

@@ -8,6 +8,21 @@ export function applyMapFilters(filters) {
     const property = feature.properties.property;
     if (!property) return false;
 
+    // Get walk times
+    const cwuDistance = property.cwu_time;
+    const transitDistance = property.bus_stop_time;
+
+    // Distance filters
+    const matchesCwuDistance =
+      (!filters.minDistCWU || cwuDistance >= filters.minDistCWU) &&
+      (!filters.maxDistCWU || cwuDistance <= filters.maxDistCWU);
+
+    const matchesTransitDistance =
+      (!filters.minDistBus || transitDistance >= filters.minDistBus) &&
+      (!filters.maxDistBus || transitDistance <= filters.maxDistBus);
+
+    if (!matchesCwuDistance || !matchesTransitDistance) return false;
+
     const unitTypes = property.unit_types || [];
 
     return unitTypes.some(unit => {
