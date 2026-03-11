@@ -6,7 +6,24 @@ PROD_FILE=-f docker-compose.prod.yml
 TEST_FILE=-f docker-compose.test.yml
 TEST_PROJECT=-p hose_test
 
-.PHONY: dev dev-build prod build down logs logs-dev logs-prod deploy-frontend deploy-api restart osrm test test-down test-logs
+.PHONY: \
+	dev \
+	dev-build \
+	prod \
+	build \
+	down \
+	down-prod \
+	logs \
+	logs-dev \
+	logs-prod \
+	deploy-frontend \
+	deploy-api \
+	restart \
+	osrm \
+	test \
+	test-down \
+	test-logs
+
 
 # Run in development config
 dev:
@@ -27,6 +44,11 @@ build:
 # Stop containers
 down:
 	$(COMPOSE) $(BASE_FILE) down
+
+# Stop containers in production build
+down-prod:
+	$(COMPOSE) $(BASE_FILE) $(PROD_FILE) down
+
 
 # View logs
 logs:
