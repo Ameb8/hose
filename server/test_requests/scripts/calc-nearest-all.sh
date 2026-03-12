@@ -7,12 +7,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Source API-Key from .env
 export $(grep -v '^#' "$SCRIPT_DIR/../../../.env" | xargs)
 
-
-DATA_FILE="$1"
-
-# Make POST request for properties/
-curl -v -X POST "$SERVER_URL/properties" \
+curl -X PATCH "$SERVER_URL/properties/stops" \
+  -H "X-API-Key: $ADMIN_KEY" \
   -H "Content-Type: application/json" \
-  -H "Accept: application/json" \
-  -H "x-api-key: $ADMIN_KEY" \
-  --data @"$DATA_FILE"
+
