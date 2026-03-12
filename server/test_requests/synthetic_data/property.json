@@ -1,0 +1,33 @@
+{
+  "name": "Example Residence Hall",
+  "propertyType": "DORM",
+  "description": "A sample dormitory property in Ellensburg. Conveniently located near campus facilities with all amenities included.",
+
+  "contactPhone": "5095551234",
+  "contactEmail": "housing@example.edu",
+
+  "latitude": 46.99618,
+  "longitude": -120.54863,
+
+  "street": "123 Example St.",
+  "city": "Ellensburg",
+  "state": "WA",
+  "zip": "98926",
+
+  "unitTypes": [
+    {
+      "name": "Standard Double",
+      "bedrooms": 2,
+      "bathrooms": 0,
+      "rentCents": 100000,
+      "description": "Double bedroom unit with shared bathroom"
+    },
+    {
+      "name": "Double En Suite",
+      "bedrooms": 2,
+      "bathrooms": 1,
+      "rentCents": 120000,
+      "description": "Double bedroom unit with private bathroom"
+    }
+  ]
+}

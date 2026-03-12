@@ -1,0 +1,156 @@
+{
+  "properties": [
+    {
+      "name": "Canyon Creek Apartments",
+      "propertyType": "APARTMENT",
+      "description": "Canyon Creek Apartments offer modern student-friendly living within walking distance of Central Washington University. Residents enjoy quiet courtyards, bike storage, and easy access to downtown Ellensburg shops and restaurants.",
+      "contactPhone": "5095552101",
+      "contactEmail": "leasing@canyoncreekapt.com",
+      "latitude": 47.0068,
+      "longitude": -120.5329,
+      "street": "915 N Pine St",
+      "city": "Ellensburg",
+      "state": "WA",
+      "zip": "98926",
+      "unitTypes": [
+        {
+          "name": "Studio",
+          "bedrooms": 0,
+          "bathrooms": 1,
+          "rentCents": 92000,
+          "description": "Compact studio with kitchenette and private bathroom"
+        },
+        {
+          "name": "1 Bed 1 Bath",
+          "bedrooms": 1,
+          "bathrooms": 1,
+          "rentCents": 112000,
+          "description": "Single bedroom apartment with open living area"
+        },
+        {
+          "name": "2 Bed 1 Bath",
+          "bedrooms": 2,
+          "bathrooms": 1,
+          "rentCents": 138000,
+          "description": "Two-bedroom unit ideal for roommates"
+        }
+      ]
+    },
+    {
+      "name": "Riverbend Student Flats",
+      "propertyType": "APARTMENT",
+      "description": "Riverbend Student Flats feature furnished apartments designed for students and young professionals. Amenities include study lounges, shared outdoor seating areas, and convenient access to campus transit routes.",
+      "contactPhone": "5095553122",
+      "contactEmail": "info@riverbendflats.com",
+      "latitude": 47.0081,
+      "longitude": -120.5352,
+      "street": "1602 N Alder St",
+      "city": "Ellensburg",
+      "state": "WA",
+      "zip": "98926",
+      "unitTypes": [
+        {
+          "name": "Shared 3 Bed 2 Bath",
+          "bedrooms": 3,
+          "bathrooms": 2,
+          "rentCents": 72000,
+          "description": "Rent per bedroom in shared three-bedroom apartment"
+        },
+        {
+          "name": "2 Bed 1 Bath",
+          "bedrooms": 2,
+          "bathrooms": 1,
+          "rentCents": 129000,
+          "description": "Two-bedroom apartment with shared living room"
+        }
+      ]
+    },
+    {
+      "name": "Kittitas Court Residences",
+      "propertyType": "APARTMENT",
+      "description": "Kittitas Court Residences provide quiet apartment living just minutes from downtown Ellensburg. The property features tree-lined walkways, covered bike parking, and on-site laundry facilities.",
+      "contactPhone": "5095554410",
+      "contactEmail": "leasing@kittitascourt.com",
+      "latitude": 47.0039,
+      "longitude": -120.5278,
+      "street": "710 E University Way",
+      "city": "Ellensburg",
+      "state": "WA",
+      "zip": "98926",
+      "unitTypes": [
+        {
+          "name": "1 Bed 1 Bath",
+          "bedrooms": 1,
+          "bathrooms": 1,
+          "rentCents": 108000,
+          "description": "One-bedroom apartment with full kitchen"
+        },
+        {
+          "name": "2 Bed 2 Bath",
+          "bedrooms": 2,
+          "bathrooms": 2,
+          "rentCents": 152000,
+          "description": "Two-bedroom unit with private bathrooms"
+        }
+      ]
+    },
+    {
+      "name": "Wildcat Commons",
+      "propertyType": "DORM",
+      "description": "Wildcat Commons is a residence hall-style building designed for student living. Located near campus recreation facilities, the building includes shared kitchens, study lounges, and high-speed internet.",
+      "contactPhone": "5095551900",
+      "contactEmail": "housing@wildcatcommons.edu",
+      "latitude": 47.0072,
+      "longitude": -120.5338,
+      "street": "1400 N Walnut St",
+      "city": "Ellensburg",
+      "state": "WA",
+      "zip": "98926",
+      "unitTypes": [
+        {
+          "name": "Standard Double",
+          "bedrooms": 2,
+          "bathrooms": 0,
+          "rentCents": 95000,
+          "description": "Two-person dorm room with shared hallway bathroom"
+        },
+        {
+          "name": "Double En Suite",
+          "bedrooms": 2,
+          "bathrooms": 1,
+          "rentCents": 118000,
+          "description": "Two-person dorm room with private bathroom"
+        }
+      ]
+    },
+    {
+      "name": "Valley View Townhomes",
+      "propertyType": "TOWNHOME",
+      "description": "Valley View Townhomes offer spacious multi-level housing near campus and downtown Ellensburg. Each unit includes a full kitchen, in-unit laundry, and private patio space.",
+      "contactPhone": "5095552784",
+      "contactEmail": "leasing@valleyviewtownhomes.com",
+      "latitude": 47.0047,
+      "longitude": -120.5295,
+      "street": "825 E 8th Ave",
+      "city": "Ellensburg",
+      "state": "WA",
+      "zip": "98926",
+      "unitTypes": [
+        {
+          "name": "2 Bed 1.5 Bath Townhome",
+          "bedrooms": 2,
+          "bathrooms": 2,
+          "rentCents": 149000,
+          "description": "Two-story townhome with living room and kitchen downstairs"
+        },
+        {
+          "name": "3 Bed 2 Bath Townhome",
+          "bedrooms": 3,
+          "bathrooms": 2,
+          "rentCents": 176000,
+          "description": "Spacious three-bedroom unit with private patio"
+        }
+      ]
+    }
+  ]
+}
