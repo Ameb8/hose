@@ -34,11 +34,15 @@ OUTPUT_DIR="$DATA_DIR/$PROFILE_NAME"
 
 mkdir -p "$OUTPUT_DIR"
 
+# Set Docker image (default to osrm/osrm-backend, allow ARM override)
+OSRM_IMAGE="${OSRM_IMAGE:-osrm/osrm-backend}"
+
 echo "Preprocessing profile: $PROFILE_NAME"
 echo "Using Lua profile: $LUA_PROFILE"
 echo "Output directory: $OUTPUT_DIR"
+echo "Using Docker image: $OSRM_IMAGE"
 
-docker run --rm -v "$DATA_DIR":/data osrm-backend-arm sh -c "\
+docker run --rm -v "$DATA_DIR":/data $OSRM_IMAGE sh -c "\
   cd /data/$PROFILE_NAME && \
   osrm-extract -p $LUA_PROFILE ellensburg.osm.pbf && \
   osrm-partition ellensburg.osrm && \
