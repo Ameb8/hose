@@ -4,6 +4,46 @@ The HOSE software project aims to help CWU students (and potential CWU students)
 
 [HOSE Webpage](https://differences-recovered-nat-extraction.trycloudflare.com/)
 
+## Table of Contents
+
+- [Running Software](#running-software)
+  - [Running the Frontend](#running-the-frontend)
+    - [System Requirements](#system-requirements)
+    - [First-Time Initialization](#first-time-initialization)
+    - [Running the Electron Application](#running-the-electron-application)
+    - [Using Public Server](#using-public-server)
+      - [Endpoints Needed by Frontend](#endpoints-needed-by-frontend)
+  - [Running the Backend](#running-the-backend)
+    - [System Requirements](#system-requirements-1)
+    - [First-Time Initialization](#first-time-initialization-1)
+      - [Setting up .env File](#setting-up-env-file)
+      - [Setting up OSRM Routing Service](#setting-up-osrm-routing-service)
+      - [Setting up Image Service](#setting-up-image-service)
+    - [Running Locally](#running-locally)
+    - [Testing Succesfull Startup](#testing-succesfull-startup)
+- [Hosting Project in Production](#hosting-project-in-production)
+  - [Initial Setup](#initial-setup)
+  - [Running the Project](#running-the-project)
+  - [Accessing Production URL](#accesing-production-url)
+  - [Stopping the Server](#stopping-the-server)
+- [Updating Database Content](#updating-database-content)
+  - [System Requirements](#system-requirements-2)
+  - [Bulk Uploads Initial Setup](#bulk-uploads-initial-setup)
+  - [Uploading Property](#uploading-property)
+    - [Uploading a Single Property](#uploading-a-single-property)
+      - [Data format](#data-format)
+      - [Performing Upload](#performing-upload)
+    - [Bulk Property Uploads](#bulk-property-uploads)
+      - [Data Format](#data-format-1)
+      - [Performing Upload](#performing-upload-1)
+  - [Uploading Property Images](#uploading-property-images)
+    - [Image Requirements](#image-requirements)
+    - [Uploading a Single Property Image](#uploading-a-single-property-image)
+    - [Bulk Property Image Uploads](#bulk-property-image-uploads)
+      - [Data Format](#data-format-2)
+      - [Performing Upload](#performing-upload-2)
+  - [Calculating Distances](#calculating-distances)
+
 # Running Software
 
 In order to run this application, it must first be downloaded. This can be done from github with:
@@ -135,6 +175,7 @@ The following 3 commands will then preprocess data for each OSRM instance. Optio
 
 Due to the small map size included in this repository, most machines will be able to execute this scripts in a couple seconds. The routing services will now be enabled when running the project normally.
 
+
 #### Setting up Image Service
 
 Because the image URLs included in the repository's data seed are valid, property images will be displayed. However, to allow for uploading new images when running the server, you must [create a Cloudinary account](https://cloudinary.com/signup) and update the following values in the .env file with your own credentials:
@@ -170,19 +211,41 @@ Note that this may take some time to start up on the initial runs. However, whil
 make logs-dev
 ```
 
-If the startup process was completed succesfuly, the followng API endpoints will be accesable on the same device running the server:
+### Testing Succesfull Startup
+
+If the startup process was completed succesfuly, the following API endpoints will be accesable on the same device running the server:
 
 [GeoJSON Features](http://localhost:8080/destinations) (GET)
 
-[Detailed Property Info (change trailing int to any property's ID)](http://localhost:8080/properties/1) (GET)
+[Detailed Property Info (change trailing int to any property's ID)](http://localhost:8080/properties/56) (GET)
 
 [Routing Data Between 2 Destinations](http://localhost:8080/destinations/10/70/route?profile=BIKE) (GET)
+
+Additionally, the routing services can be tested directly with:
+
+```bash
+./osrm/scripts/test-req-bike.sh
+./osrm/scripts/test-req-walk.sh
+./osrm/scripts/test-req-foot.sh
+```
+
+Succesful output will look something like:
+
+```
+Calculating wal time/distance from North Village Cafe to Samuelson Hall with OSRM
+Google Maps benchmark result: ~16 minutes / ~0.8 miles
+In OSRM units: ~960 seconds / ~1287.5 meters
+OSRM results:
+{"code":"Ok","routes":[{"legs":[{"steps":[],"distance":1640.6,"duration":445.6,"summary":"","weight":445.6}],"distance":1640.6,"duration":445.6,"weight_name":"duration","weight":445.6}],"waypoints":[{"hint":"iUoAgCxLAIAKAAAAFgAAAAAAAAAAAAAAkcyOQPtWC0EAAAAAAAAAAAoAAAAWAAAAAAAAAAAAAAAGAAAAcc3Q-NZLzQJ4zdD42kvNAgAA7xMXMXG2","distance":0.693497,"name":"","location":[-120.533647,47.008726]},{"hint":"O1YAgD9WAIC7AAAAQQAAAAAAAAAAAAAAwagnQqRDZ0EAAAAAAAAAALsAAABBAAAAAAAAAAAAAAAGAAAAEbfQ-L0uzQLMtdD4wC7NAgAADwAXMXG2","distance":24.709681,"name":"Walnut Mall","location":[-120.539375,47.001277]}]}
+```
 
 
 
 # Hosting Project in Production
 
 The `docker-compose.prod.yml` file included in this repository supports public hosting of the HOSE Webpage and the backend services. Public exposure is done through the use of cloudflared tunnels. These tunnels automatically use *https* and *TLS* certificates, as well as providing basic *DDoS* protection and bot filtering. Furthermore, the client only sees the *IP* address of Cloudflare's edge network, not the host machine's *IP* address. However, due to lack of domain ownership, the quick tunnel feature is used, resulting in a new URL every time the tunnel containers are restarted.
+
+## Initial Setup
 
 First time initialization can be completed as described in the previous section. This includes creating a valid .env file and preprocessing routing data. However, as it is designed for our specific system, the OSRM service assumes an `ARM` CPU architecture. However, this can be adjusted by removing the image tag from all osrm services in the `docker-compose.prod.yml` file. This is the seciton that needs updated:
 
@@ -211,7 +274,9 @@ It can be changed to:
     restart: unless-stopped
 ```
 
-Additionally, as the URLs of the servers are partially randomly generated, a few paths must be updated throughout the project. Firtly, the `SERVER_URL` variable in the `.env` file can be changed. This does not affect the webpage or server, but is required for the project's utility and test scripts to function correctly. For the frontend to be able to reach the Rest-API, you must also update the `API_BASE_URL` constant at line 1 in [this frontend file](https://github.com/Ameb8/hose/blob/master/frontend/map/api.js#L1)
+## Running the Project
+
+Additionally, as the URLs of the servers are partially randomly generated, a few paths must be updated throughout the project. Firtly, the `SERVER_URL` variable in the `.env` file can be changed. This does not affect the webpage or server, but is required for the project's utility and test scripts to function correctly. For the frontend to be able to reach the Rest-API, you must also update the `API_BASE_URL` constant at line 1 in [this frontend file](https://github.com/Ameb8/hose/blob/master/frontend/map/api.js#L1). This process must be repeated every time the server's cloudflared tunnel is restarted.
 
 After setup has been completed, the production build can be started with:
 
@@ -231,14 +296,13 @@ However, you can safely restart any other service without affecting URLs. Utilit
 make deploy-frontend
 ```
 
-This will update the frontend server very quickly, deploying any code updates. However, for changes to be visible, you may need to open the webpage in a private browser, to avoid caching old states. Alternatively, the Rest-API can be redeployed with:
+This will update the frontend server very quickly, deploying any code updates. However, for changes to be visible, you may initially need to open the webpage in a private browser, to avoid caching old states. Alternatively, the Rest-API can be redeployed with:
 
 ```bash
 make deploy-api
 ```
 
 This update can take up to a minute to be up and running.
-
 
 
 ## Accesing Production URL
@@ -264,16 +328,52 @@ In order to update database content, you must have the correct `ADMIN_KEY` and `
 The database content can be updated manually (either through a database management GUI or SQL commands), but for more reliable and consistent data management, it is recomended that you use admin-endpoints where possible. First, you must ensure the update scripts are executable with the following command:
 
 ```bash
-chmod +x server/test_requests/scripts/*.sh server/test_requests/scripts/*.py 
+chmod +x server/test_requests/scripts/*.sh 
 ```
 
 These scripts allow for easy uploads of new properties and property images. These scripts read values from the project's `.env` file, however, as the path is created relative to the script locations, they can be invoked from any directory as long as file paths are properly adjusted in the execute command (no changes to scripts needed). 
+
+## System Requirements
+
+Single property or image uploads only require a working bash terminal. However, in order to use the Python bulk upload scripts, you must have `Python3` and `pip` installed on your system.
+
+## Bulk Uploads Initial Setup
+
+Setup begins by navigating to the `test_requests` directory:
+
+```bash
+cd server/test_requests
+```
+
+To isolate the Python environment, you must create and activate a virtual environment:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+Next, you must install dependencies in the virtual environment
+
+```
+pip install -r scripts/requirements.txt
+```
+
+The virtual environment can be deactivated with:
+
+```bash
+source .venv/bin/activate
+```
+
+Future runs will require the virtual environment to be rectivated. 
+
 
 ## Uploading Property
 
 ### Uploading a Single Property
 
-To upload a single property, you can create a JSON file in the same structure as included in the `hose/server/test_requests/payloads/example_property.json` file, seen [here](https://github.com/Ameb8/hose/blob/master/server/test_requests/payloads/example_property.json). The correct format can be seen below:
+#### Data format
+
+To upload a single property, you can create a JSON file in the same structure as included in the `hose/server/test_requests/synthetic_data/property.json` file, seen [here](https://github.com/Ameb8/hose/blob/master/server/test_requests/synthetic_data/property.json). The correct format can be seen below:
 
 ```json
 {
@@ -311,13 +411,29 @@ To upload a single property, you can create a JSON file in the same structure as
 }
 ```
 
+#### Performing Upload
+
 Next, the file you created can be passed as argument to the `prop-post.sh` script with the following command from project root directory. You can replace the filepath with your own `.json` file.
 
 ```bash
-./server/hose/scripts/prop-post.sh server/hose/scripts/payloads/example_property.json
+./server/hose/scripts/prop-post.sh server/hose/scripts/synthetic_data/property.json
 ```
 
 ### Bulk Property Uploads
+
+#### Data Format
+
+This repository offers a Python script to upload multiple properties in a single run. The data format is similar to single property uploads, however, instead of  one JSON object containing all fields for a single property, you input an object containing a `properties` list of JSON objects. Each JSON object in the `properties` array is formatted identically to single property uploads. The exact data format can be seen [here](https://github.com/Ameb8/hose/blob/master/server/test_requests/synthetic_data/properties_bulk.json).
+
+#### Performing Upload
+
+After navigating to the `test_requests` folder with `cd server/test_requests`, you must activate the virtual environment. Assuming your data is at the same path as the synthetic example data, you can perform the upload with:
+
+```bash
+python scripts/upload_props.py synthetic_data/properties_bulk.json
+```
+
+The uploads themeselves happen quickly, however, there is a 10 second delay between them to avoid rate-limiting. Additionally, if an upload fails for any reason, it will not prevent other uploads from being attempted. 
 
 ## Uploading Property Images
 
@@ -333,7 +449,7 @@ The HOSE software supports the following image formats:
 
 Images are restricted to a maximum size of *5MB*. Additionally, it is recomended that uploaded images are high-resolution and in landscape-style dimensions. However, exact image dimensions are not enforced, but adherence to this will ensure property images appear nicely on the frontend.
 
-### Uplaoding a Single Property Image
+### Uploading a Single Property Image
 
 In order to upload a single property image, you must first identify the property's primary key. This can be done by inspecting the database content manually or by using the `id` field from the `/properties` endpoint, found [here](http://localhost:8080/properties) if running in development mode. 
 
@@ -343,4 +459,50 @@ Next, an image meeting the requirements must be found. Assuming you are uploadin
 ./server/hose/scripts/img-post.sh 1 server/hose/scripts/payloads/example_img.png
 ```
 
-### Bulk Property Image uploads
+### Bulk Property Image Uploads
+
+#### Data Format
+
+Bulk image uploads require a specific directory structure containing images, as seen below:
+
+```
+synthetic_data/image_dir
+├── apt-1_1
+│   ├── image_1_.jpeg
+│   ├── image_2_.jpg
+│   └── image_3.png
+├── apt-2_2
+│   └── image.jpeg
+└── apt-3_3
+    ├── 1.jpg
+    └── 2.jpg
+```
+
+Each subdirectory in the directory you pass must end with an underscore, followed by the primary key of a property. Any character can appear before the underscore without causing problems, including underscores. Additionally, the filenames of the images themeselves do not matter. Directories can contain any number of images, with empty directories being automatically skipped. However, directories should not contain non-compatible or non-image files. All requirements for individual images still apply. 
+
+#### Performing Upload
+
+After navigating to the `test_requests` folder with `cd server/test_requests`, you must activate the virtual environment. Assuming you have a correctly formatted directory `imaage_dir` within `test_requests/synthetic_data`, you can perform the upload with:
+
+```bash
+python3 scripts/upload_images.py synthetic_data/image_dir
+```
+
+Failed uploads will not prevent other uploads from being attempted. Note that the scirpt sets a 10 second delay between uploads to avoid rate-limiting restrictions.
+
+## Calculating Distances
+
+The database stores distance and time walking to the nearest bus stop and CWU location for each property. However, this action must be triggered manually. To do this for an individual property, you must first identify its' primary key. Next, from the project's root directory, this can be done with:
+
+```bash
+./server/test_requests/scripts/calc-nearest.sh 1
+```
+
+This can be done for any property by replacing the argument with another property's primary key. To make this calculation for all properties, this can be done with:
+
+```bash
+./server/test_requests/scripts/calc-nearest-all.sh
+```
+
+Even when calculating for all properties, this can be done very quickly, taking only a few seconds on most machines.
+
