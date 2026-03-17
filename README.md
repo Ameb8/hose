@@ -1,57 +1,297 @@
-# HOSE
+# HOSE Application – Setup & Local Run Guide
 
-## For Development
+## Overview
 
-### Using Public Server
+This document provides step-by-step instructions for running the HOSE application locally.
+The system uses:
 
-The server is now hosted, and available at [this base url.](https://kit-loved-brown-water.trycloudflare.com). The frontend can query GeoJSON feaature list at the /destinations endpoint and detailed property data at the /properties/{PK} endpoint. In order to avoid malicous bot behavior, rate-limitng allows only 5 requests per minute from a client for all endoints. This can be adjusted if it is causing anyone issues. Additionl endpoints exist for write operations, intended only for admins to populate the database in a consistent aand standardized manner.
+* **Docker** → for the PostgreSQL database
+* **Node.js** → for the backend server
+* **Ollama (LLaMA)** → for AI/LLM responses
 
-#### Endpoints Needed by Frontend:
+This hybrid setup keeps the database portable while allowing the backend and AI to run locally for easier development and testing.
 
-[GeoJSON Features](https://kit-loved-brown-water.trycloudflare.com/destinations) (GET)
+---
 
-[Detailed Property Info (change trailing int to any property's ID)](https://kit-loved-brown-water.trycloudflare.com/properties/1) (GET)
+## System Requirements
 
-The URL may change periodically until a more permenant hosting solution is found. This document will be updated upon url change. Additionally, the server will periodically go down. In this scenario, running locally will allow testing of API interactions (see below).
+Ensure the following are installed:
 
-### Running Locally
+### Core Software
 
+* **Node.js** (v18 or newer recommended)
+* **npm** (included with Node.js)
+* **Docker Desktop** (for database container)
+* **Git** (optional, for cloning repository)
 
-If the server is not currently up and running, the project must be run locally to test API interactions. If Docker is installed, this project is very easy to run locally.  After installing Docker, you can clone the repository and navigate to the root directory with:
+### AI / LLM
+
+* **Ollama**
+
+  * Download: https://ollama.com
+  * Used to run local LLM models (e.g., LLaMA)
+
+---
+
+## Project Setup
+
+### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/ameb8/hose
+git clone https://github.com/Ameb8/hose.git
 cd hose
 ```
 
-Next, a .env file must be created to store project config values. a .env file has been posted in the github channel on discord, or contact developers for access.
+---
 
-The following database config values in the resulting `.env` file can optionally be modified (this is not required):
-
-```bash
-# PostgreSQL config
-DB_USER=username
-DB_PASSWORD=password
-DB_NAME=hose_db
-```
-
-Now, the project can simply be run with:
+### 2. Install Dependencies
 
 ```bash
-make dev
+npm install
 ```
 
-Logs from all running services can be viewed with:
+---
+
+### 3. Configure Environment Variables
+
+Create a `.env` file in the root directory:
+
+```env
+POSTGRES_DB=hose_db
+POSTGRES_USER=postgres_user
+POSTGRES_PASSWORD=postgres_password
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+
+OLLAMA_URL=http://localhost:11434
+MODEL_NAME=llama3
+```
+
+Ensure values match your local setup.
+
+---
+
+## Database Setup (Docker)
+
+The PostgreSQL database runs inside a Docker container.
+
+### Step 1: Start the Database
+
+Navigate to the database folder (if applicable), then run:
 
 ```bash
-make logs-dev
+docker compose up -d
 ```
 
-The initial run may take some time to build the container images, but subsequent runs will be faster. However, expect the server to take up to a minute to start up. A webpage showing results of an API call to the server can be accessed at [http://localhost:5173](http://localhost:5173). The page will automatically reload with code changes. On the same device in which the software was run, the rest endpoints required by the frontend are now:
+This will:
 
-[GeoJSON Features](http://localhost:8080/destinations) (GET)
+* Start PostgreSQL in a container
+* Expose it on **localhost:5432**
 
-[Detailed Property Info (change trailing int to any property's ID)](http://localhost:8080/properties/1) (GET)
+---
 
+### Step 2: Create the Database
 
+If not auto-created, connect using pgAdmin or terminal and run:
 
+```sql
+CREATE DATABASE hose_db;
+```
+
+---
+
+## Running the Application
+
+### Step 1: Start the LLM (Ollama)
+
+```bash
+ollama run llama3
+```
+
+Leave this running in a separate terminal.
+
+---
+
+### Step 2: Start the Backend Server
+
+```bash
+node server.js
+```
+
+Expected output:
+
+```
+Server running on port XXXX
+Connected to database
+```
+
+---
+
+### Step 3: Open the Frontend
+
+* Open `index.html` directly in your browser
+  **OR**
+* If using a frontend framework:
+
+```bash
+npm start
+```
+
+---
+
+## Testing the Application
+
+1. Open the application in your browser
+2. Enter sample queries (e.g., apartment searches)
+3. Verify:
+
+   * Database queries return results
+   * AI responses are generated
+   * UI is readable and properly formatted
+
+---
+
+## Common Issues & Fixes
+
+### Database Connection Fails
+
+* Ensure Docker container is running:
+
+```bash
+docker ps
+```
+
+* Verify `.env` credentials
+* Confirm port `5432` is available
+
+---
+
+### LLM Not Responding
+
+* Ensure Ollama is running
+* Check installed models:
+
+```bash
+ollama list
+```
+
+---
+
+### Port Already in Use
+
+* Change the port in `server.js`
+* Or stop the process using the port
+
+---
+
+### Docker Issues
+
+```bash
+docker compose down
+docker compose up -d
+```
+
+---
+
+## Switching to a Different LLM Model
+
+The system is designed to allow easy swapping of LLM providers.
+
+---
+
+### Option 1: Use a Different Ollama Model
+
+```bash
+ollama run mistral
+```
+
+Update `.env`:
+
+```env
+MODEL_NAME=mistral
+```
+
+---
+
+### Option 2: Use OpenAI API (Cloud-Based)
+
+1. Install dependency:
+
+```bash
+npm install openai
+```
+
+2. Add to `.env`:
+
+```env
+OPENAI_API_KEY=your_api_key_here
+```
+
+3. Replace Ollama logic in backend:
+
+```javascript
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+const response = await client.chat.completions.create({
+  model: "gpt-4o-mini",
+  messages: [{ role: "user", content: userInput }],
+});
+```
+
+---
+
+### Option 3: Use HuggingFace Models
+
+```bash
+npm install @huggingface/inference
+```
+
+Replace LLM API calls with HuggingFace inference.
+
+---
+
+## Why LLMs Can Be Swapped Easily
+
+* LLM interaction is isolated in the backend
+* Only one module/function needs modification
+* No changes required for:
+
+  * Database
+  * Frontend UI
+  * Core logic
+
+---
+
+## Architecture Notes
+
+* PostgreSQL runs in Docker for consistency and portability
+* Backend (Node.js) runs locally for simplicity
+* LLM runs locally via Ollama for fast responses
+
+This hybrid approach balances ease of setup with real-world architecture practices.
+
+---
+
+## Summary
+
+To run the application:
+
+1. Start Docker (PostgreSQL)
+2. Start Ollama (LLM)
+3. Run backend (`node server.js`)
+4. Open frontend
+
+---
+
+If issues occur, check:
+
+* `.env` configuration
+* Docker container status
+* Ollama status
+* Console logs
+
+---
