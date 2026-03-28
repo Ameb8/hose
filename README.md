@@ -2,7 +2,7 @@
 
 The HOSE software project aims to help CWU students (and potential CWU students) evaluate housing options. Below is the live webpage:
 
-[HOSE Webpage](https://differences-recovered-nat-extraction.trycloudflare.com/)
+[HOSE Webpage](https://slow-healing-church-slideshow.trycloudflare.com)
 
 ## Table of Contents
 
@@ -107,21 +107,21 @@ Note that this requires the development server to be running in order to work. H
 
 ### Using Public Server
 
-The server is now hosted, and available at [this base url](https://driving-solaris-stewart-visiting.trycloudflare.com). The frontend can query GeoJSON feature list at the `/destinations` endpoint, detailed property data at the `/properties/{PROPERTY_PK}` endpoint, and routing calculations at the `/destinations/{SOURCE_PK}/{DEST_PK}/route?profile={TRANSPORTATION_METHOD}`. In order to avoid malicous bot behavior, rate-limitng allows only 5 requests per minute from a client for all endoints. This can be adjusted if it is causing anyone issues. Additional endpoints exist for write operations, intended only for admins to populate the database in a consistent and standardized manner.
+The server is now hosted, and available at [this base url](https://asp-scholarship-rachel-sheriff.trycloudflare.com). The frontend can query GeoJSON feature list at the `/destinations` endpoint, detailed property data at the `/properties/{PROPERTY_PK}` endpoint, and routing calculations at the `/destinations/{SOURCE_PK}/{DEST_PK}/route?profile={TRANSPORTATION_METHOD}`. In order to avoid malicous bot behavior, rate-limitng allows only 5 requests per minute from a client for all endoints. This can be adjusted if it is causing anyone issues. Additional endpoints exist for write operations, intended only for admins to populate the database in a consistent and standardized manner.
 
 The URL may change periodically until a more permenant hosting solution is found. This document will be updated upon url change. Additionally, the server will periodically go down. In this scenario, running locally will allow testing of API interactions (see below).
 
 #### Endpoints Needed by Frontend:
 
-[GeoJSON Features](https://driving-solaris-stewart-visiting.trycloudflare.com/destinations) (GET)
+[GeoJSON Features](https://asp-scholarship-rachel-sheriff.trycloudflare.com/destinations) (GET)
 
 This endpoint returns all map features in GeoJSON format. It is called once on initial map load.
 
-[Detailed Property Info (change trailing int to any property's ID)](https://driving-solaris-stewart-visiting.trycloudflare.com/properties/56) (GET)
+[Detailed Property Info (change trailing int to any property's ID)](https://asp-scholarship-rachel-sheriff.trycloudflare.com/properties/56) (GET)
 
 This endpoint is used to query detailed informtion about any property object. The path parameter can be switched to any property objects' ID. If the primry key does not reference valid Property object, the request will fail. The frontend uses this endpoint to display HOSE cards and enable detailed property comparisons.
 
-[Routing Data Between 2 Destinations](https://driving-solaris-stewart-visiting.trycloudflare.com/destinations/10/70/route?profile=BIKE) (GET)
+[Routing Data Between 2 Destinations](https://asp-scholarship-rachel-sheriff.trycloudflare.com/destinations/10/70/route?profile=BIKE) (GET)
 
 This endpoint returns routing data for travelling between two destination objects. The response includes travel time and distance, as well as travel path in GeoJSON format. The two path parameters are the primary keys of the source and destination objects. The query parameter allows for selection of different travel modes, defaulting to `WALK` if not provided. Valid values are "WALK", "BIKE", or "CAR". 
 
